@@ -25,6 +25,51 @@
     box-shadow: 0 0 40px rgba(122,40,40,0.3), inset 0 0 60px rgba(0,0,0,0.5);
     position: relative;
 }
+@media (max-width: 600px) {
+    .dialog-overlay {
+        padding: 12px;
+        align-items: flex-end;
+    }
+    .dialog-box {
+        padding: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    .dialog-avatar {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    .dialog-text {
+        font-size: 1rem !important;
+        min-height: 60px;
+    }
+    .dialog-option {
+        padding: 14px 16px !important;
+        font-size: 1rem !important;
+        min-height: 48px;
+    }
+    .dialog-input {
+        font-size: 16px !important; /* Prevent iOS zoom */
+        padding: 14px 16px !important;
+    }
+    .dialog-btn {
+        padding: 14px 24px !important;
+        font-size: 1rem !important;
+    }
+    .user-memorial h3 {
+        font-size: 1.1rem !important;
+    }
+    .user-memorial .memorial-name {
+        font-size: 1.5rem !important;
+    }
+    .personal-welcome {
+        font-size: 0.85rem !important;
+        padding: 12px !important;
+    }
+    .personal-welcome .name {
+        font-size: 1.1rem !important;
+    }
+}
 .dialog-box::before {
     content: "";
     position: absolute;
@@ -79,6 +124,8 @@
     font-size: 1rem;
     margin-bottom: 16px;
     outline: none;
+    -webkit-appearance: none;
+    border-radius: 0;
 }
 .dialog-input:focus {
     border-color: var(--blood);
@@ -100,8 +147,10 @@
     cursor: pointer;
     text-align: left;
     transition: 0.2s;
+    -webkit-tap-highlight-color: transparent;
 }
-.dialog-option:hover {
+.dialog-option:hover,
+.dialog-option:active {
     background: var(--blood);
     color: var(--cream);
     border-color: var(--blood);
@@ -116,8 +165,10 @@
     cursor: pointer;
     display: block;
     margin: 0 auto;
+    -webkit-tap-highlight-color: transparent;
 }
-.dialog-btn:hover {
+.dialog-btn:hover,
+.dialog-btn:active {
     background: var(--blood);
     color: var(--graphite);
 }
@@ -128,6 +179,11 @@
     font-size: 1.5rem;
     cursor: pointer;
     line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .dialog-close:hover { color: var(--blood); }
 
