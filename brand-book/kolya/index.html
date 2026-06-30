@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOLYA THE GIBBON — Character Bible</title>
+  <style>
+    :root {
+      --bg: #1a1410;
+      --text: #d4c8a8;
+      --accent: #8b0000;
+      --border: #4a3424;
+      --panel: #221913;
+      --muted: #a99977;
+      --paper: #2b2018;
+      --shadow: rgba(0,0,0,0.45);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, rgba(139,0,0,0.08), transparent 35%),
+        linear-gradient(180deg, #21170f 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 56px;
+    }
+    .hero {
+      border: 2px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(255,220,160,0.04), rgba(0,0,0,0.15)),
+        var(--paper);
+      padding: 28px;
+      box-shadow: 0 16px 40px var(--shadow), inset 0 0 80px rgba(0,0,0,0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(18px);
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      background: rgba(139, 0, 0, 0.12);
+      top: -90px;
+      right: -40px;
+    }
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 180, 90, 0.05);
+      bottom: -70px;
+      left: -50px;
+    }
+    h1, h2, h3, h4 { margin: 0 0 12px; line-height: 1.15; }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: #eadfbf;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000, 0 0 18px rgba(139,0,0,0.25);
+    }
+    .burned {
+      display: inline-block;
+      padding: 6px 10px;
+      background:
+        linear-gradient(180deg, rgba(255,214,160,0.05), rgba(60,30,15,0.4));
+      border: 1px solid #6a4a34;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #c8b690;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .lead {
+      color: var(--muted);
+      margin-top: 14px;
+      max-width: 980px;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .nav a {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.18);
+    }
+    .nav a:hover { border-color: var(--accent); color: #f0e6c8; }
+    section {
+      margin-top: 24px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.12));
+      padding: 22px;
+      box-shadow: 0 10px 24px var(--shadow);
+    }
+    h2 {
+      font-size: 1.5rem;
+      color: #f0e6c8;
+      text-transform: uppercase;
+      border-left: 6px solid var(--accent);
+      padding-left: 12px;
+      margin-bottom: 18px;
+    }
+    p { margin: 0 0 14px; }
+    .meta-grid,
+    .rules,
+    .tattoo-map,
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.16);
+      padding: 14px;
+    }
+    .card h3, .card h4 {
+      color: #efdfbd;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 6px 0; }
+    .quote-list li::marker { color: var(--accent); }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    figure {
+      margin: 0;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #120e0b;
+    }
+    figcaption {
+      padding: 12px;
+      font-size: 0.95rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    code, pre {
+      font-family: "Courier New", Courier, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    pre {
+      margin: 0;
+      background: #130f0c;
+      border: 1px solid var(--border);
+      padding: 14px;
+      color: #e8dcbb;
+    }
+    .small { color: var(--muted); font-size: 0.95rem; }
+    .accent { color: #e26a6a; }
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 8px 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 700px) {
+      .wrap { padding: 16px 12px 40px; }
+      .hero, section { padding: 16px; }
+      .nav { gap: 8px; }
+      .nav a { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="burned">
+        <h1>KOLYA THE GIBBON — Character Bible</h1>
+      </div>
+      <div class="subtitle">Tales from the Дед</div>
+      <p class="lead">
+        Производственный бренд-бук персонажа Николая Белова для хоррор-комикса с чёрным юмором.
+        Этот лист фиксирует канон внешности, манеры, запаха, привычек, тату-карту лица,
+        визуальные ограничения и готовые референсы для иллюстрации, 3D, раскадровки и AI-генерации.
+      </p>
+      <nav class="nav">
+        <a href="#bio">BIO / СУЩНОСТЬ</a>
+        <a href="#tattoos">FACE TATTOO MAP</a>
+        <a href="#refs">REFERENCE SHEETS</a>
+        <a href="#rules">CANON RULES</a>
+        <a href="#prompts">PROMPT TEMPLATE</a>
+      </nav>
+    </header>
+
+    <section id="bio">
+      <h2>BIO / СУЩНОСТЬ</h2>
+      <p>
+        Николай Белов, он же Калич, Колян, Гиббон, — деградировавший славянский мужик около сорока лет, будто выросший не из семьи и двора, а из затхлого подъезда, пустых бутылок и чужих долговых расписок. Он живёт на пособие, бесконечно клянчит деньги у знакомых, соседей, случайных собутыльников и у любого, кто задержал на нём взгляд дольше трёх секунд. Работы у него нет и, главное, никогда не было как внутреннего намерения: Коля не просто безработный, а принципиально паразитический организм, приспособленный к выживанию за чужой счёт. Он пьёт «виноградный день» — спирт с газировкой и любой мутный суррогат, который можно достать по дешёвке, курит без остановки, жуёт чипсы, засыпает там, где упал, и не испытывает ни стыда, ни благодарности, ни рефлексии. Вокруг него всегда держится запах скисшего пива, пота, дешёвых сигарет и старого подъездного текстиля.
+      </p>
+      <p>
+        Женат на Алёнке; вместе они — профессиональная микросекта попрошаек «до получки». Их дом — убитая однушка с жёлтыми стенами, где бардак уже стал частью архитектуры: окурки, крошки, пустые банки, пакетики, мутные кружки и вечно липкий стол. Голос у Коли писклявый, слова он тянет, будто пытается выпросить интонацией то, чего не сумел добиться лицом: «а-а-а ну-у-у...». Он постоянно оправдывается, юлить умеет лучше, чем ходить, и любую катастрофу объясняет одинаково: это не он, оно само. Особая черта — кусаться. Из-за отсутствия двух передних больших зубов и обломанных остальных его рот работает как тупой капкан: он может впиться пеньками в руку, шею или лицо, будто бродячий пёс, которого никто никогда не дрессировал и не жалел. Архетипически Коля — социальный паразит, бродяга, пьяный кусака и бытовой упырь, существующий на стыке жалости, отвращения и чёрного юмора.
+      </p>
+      <div class="meta-grid">
+        <div class="card">
+          <h3>Catchwords</h3>
+          <ul class="quote-list">
+            <li>«Займи тыщ до получки»</li>
+            <li>«Я потом отдам, чесслово»</li>
+            <li>«Дай на пивасик»</li>
+            <li>«Это не я, это оно само»</li>
+            <li>«А-а-а ну ты чё, а»</li>
+            <li>«Мать...»</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Архетип</h3>
+          <p>Социальный паразит / бродяга / пьяный кусака.</p>
+        </div>
+        <div class="card">
+          <h3>Что никогда не делает</h3>
+          <p>Не работает, не возвращает долги, не моется регулярно, не приносит пользу.</p>
+        </div>
+        <div class="card">
+          <h3>Аромат</h3>
+          <p>Перегар + чипсы + Cheetos + пот.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tattoos">
+      <h2>FACE TATTOO MAP</h2>
+      <div class="tattoo-map">
+        <div class="card">
+          <h3>Лоб</h3>
+          <p><span class="accent">GOLD CHAT</span> — крупная грубая надпись блоковыми буквами, расположена высоко по центру лба и читается сразу.</p>
+        </div>
+        <div class="card">
+          <h3>Межбровье</h3>
+          <p>Тёмная почти сросшаяся <span class="accent">монобровь</span>, выглядящая как татуированная полоса или жёстко затемнённый волосистый мост.</p>
+        </div>
+        <div class="card">
+          <h3>Кончик носа</h3>
+          <p><span class="accent">Чёрный закрашенный кончик носа</span> — как отдельная клякса-метка, без красноты вокруг.</p>
+        </div>
+        <div class="card">
+          <h3>Левая щека</h3>
+          <p><span class="accent">SASHA</span> — мелкая текстовая татуировка под левым глазом.</p>
+        </div>
+        <div class="card">
+          <h3>Правая щека</h3>
+          <p><span class="accent">Грубый анатомический рисунок</span> с сексуализированной формой, должен оставаться узнаваемым и нарочито кривым.</p>
+        </div>
+        <div class="card">
+          <h3>Подбородок</h3>
+          <p>Мелкая точка / метка под подбородком как нижний фиксирующий знак лица.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="refs">
+      <h2>REFERENCE SHEETS</h2>
+      <div class="gallery">
+        <figure>
+          <img src="./reference-imgs/face-expressions-v3.png" alt="Expression sheet v3: Kolya laughing, tense, terrified, thoughtful, smoking, and snarling; front teeth missing, remaining teeth like blunt stumps." />
+          <figcaption><strong>Face expressions v3</strong><br/>Файл: <code>face-expressions-v3.png</code><br/>Смех, напряжение, страх, задумчивость, курение, злой оскал. База для лица и эмоций.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/body-poses-v1.png" alt="Multi-pose sheet: Kolya standing, sitting, lying down, sleeping, drinking, smoking, urinating, jumping, and hunched over." />
+          <figcaption><strong>Body / pose sheet</strong><br/>Файл: <code>body-poses-v1.png</code><br/>Мультипозник: стоя, сидя, лёжа, сон, питьё, курение, сутулость и общий ритм тела.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/bite-attacks-v1.png" alt="Bite attack poses: Kolya lunging, biting a neck, biting an arm, biting a face, staying clamped on, and post-bite aftermath." />
+          <figcaption><strong>Bite attacks</strong><br/>Файл: <code>bite-attacks-v1.png</code><br/>Фирменные кусачие действия: прыжок, укус в шею, руку, лицо, сцепка и aftermath.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/3d-body-turnaround.png" alt="3D body turnaround sheet: front, side profile, and back view of Kolya in dark grey boxer shorts for modeling reference." />
+          <figcaption><strong>3D body turnaround</strong><br/>Файл: <code>3d-body-turnaround.png</code><br/>Фронт, профиль, спина. Полезно для лепки общей формы и осанки.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/3d-head-detail.png" alt="3D head detail of Kolya with face tattoo coordinates and facial structure marked for modeling." />
+          <figcaption><strong>3D head detail</strong><br/>Файл: <code>3d-head-detail.png</code><br/>Координаты тату, строение лба, носа, глазниц и линии рта.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/wardrobe-grid.png" alt="Wardrobe grid: dirty tank top, overshirt, singlet, hoodie, flat cap, camo pants, belt, and boots for Kolya." />
+          <figcaption><strong>Wardrobe grid</strong><br/>Файл: <code>wardrobe-grid.png</code><br/>Грязная майка, овершёрт, худи, кепка, камо-штаны, ремень, ботинки.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/props-grid.png" alt="Props grid: cigarette, mug of cheap alcohol, vodka bottle, cigarette pack, snacks, beer can, money, and household clutter." />
+          <figcaption><strong>Props grid</strong><br/>Файл: <code>props-grid.png</code><br/>Окурки, кружка с пойлом, водка, чипсы, деньги, банки, дешёвый бытовой мусор.</figcaption>
+        </figure>
+        <figure>
+          <img src="./reference-imgs/social-poses-v1.png" alt="Social poses sheet: Kolya begging, drinking, passed out on the floor, arguing with Alyonka, knocking at Ded's door, and falling asleep at the table." />
+          <figcaption><strong>Social poses v1</strong><br/>Файл: <code>social-poses-v1.png</code><br/>Клянчит, пьёт, валяется, спорит с Алёнкой, стучится к Деду, отключается за столом.</figcaption>
+        </figure>
+      </div>
+      <p class="small" style="margin-top:14px;">
+        Все изображения выше — канонические опорные листы текущей версии персонажа и должны использоваться как первичный визуальный якорь.
+      </p>
+    </section>
+
+    <section id="rules">
+      <h2>CANON RULES</h2>
+      <div class="rules">
+        <div class="card"><h3>Возраст</h3><p>40 ЛЕТ, не старше.</p></div>
+        <div class="card"><h3>Лицо</h3><p>ВСЕГДА чисто выбрито.</p></div>
+        <div class="card"><h3>Зубы</h3><p>Нет передних двух зубов сверху и снизу; остальные — обрубки-пеньки.</p></div>
+        <div class="card"><h3>Волосы</h3><p>Голова бритая или слегка с залысинами.</p></div>
+        <div class="card"><h3>Одежда</h3><p>ВСЕГДА грязная, мятая, заношенная.</p></div>
+        <div class="card"><h3>Глаза</h3><p>Пустые, серо-голубые. НЕТ красных мешков под глазами.</p></div>
+        <div class="card"><h3>Нос</h3><p>Обычный. Нет красноты.</p></div>
+        <div class="card"><h3>Татуировки</h3><p>ВСЕГДА видны и узнаваемы: GOLD CHAT, SASHA, анатомический рисунок, монобровь, чёрный кончик носа.</p></div>
+        <div class="card"><h3>Среда</h3><p>Вокруг бардак: окурки, бутылки, чипсы, липкие поверхности.</p></div>
+        <div class="card"><h3>Поведение</h3><p>Он НИКОГДА не работает и НИКОГДА не возвращает долги.</p></div>
+      </div>
+    </section>
+
+    <section id="prompts">
+      <h2>PROMPT TEMPLATE</h2>
+      <div class="prompt-grid">
+        <div class="card">
+          <h3>CHARACTER BLOCK</h3>
+          <pre>Kolya the Gibbon, Slavic male age 40, clean shaven face, bald or slightly receding hair, pale grey-waxy skin, grey-blue tired hollow eyes, no red under-eye bags, ordinary nose with blackened tip tattoo, missing top and bottom front two incisors, remaining teeth are blunt yellow stump pegs, slightly hunched posture, soft unathletic build, mild belly, dirty worn clothes, face tattoos clearly visible: GOLD CHAT on forehead, SASHA under left eye, crude anatomy drawing on right cheek, almost-monobrow, small mark under chin.</pre>
+        </div>
+        <div class="card">
+          <h3>STYLE BLOCK</h3>
+          <pre>Horror comic style, EC Comics meets Junji Ito, thick black outlines, dirty textured paper mood, sepia-brown and sickly grey palette, oppressive бытовой horror, black humor, grimy interiors, cluttered apartment details, nicotine stains, cheap alcohol atmosphere, cinematic but ugly-real.</pre>
+        </div>
+        <div class="card">
+          <h3>ANTI-COLOR REFERENCE</h3>
+          <pre>No red under-eye bags, clean shaven, age 40, grey-blue eyes, no red nose, not elderly, not handsome, not athletic, not stylish, not healthy, no clean environment, no tidy clothing, no missing face tattoos.</pre>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Tales from the Дед • Brand-Book v1 • Generated для продакшн-использования.</div>
+  </div>
+</body>
+</html>
