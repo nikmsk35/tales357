@@ -1,561 +1,643 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <title>Tales from the Дед — хоррор-антология</title>
-        <meta
-            name="description"
-            content="Сказки от Деда — ежемесячный хоррор-комикс-антология в стиле EC Comics × Junji Ito."
-        />
-        <meta property="og:title" content="Tales from the Дед" />
-        <meta
-            property="og:description"
-            content="Деревня Покровка. Дед варит брагу. Гости приходят — и не уходят."
-        />
-        <meta property="og:image" content="assets/cover/cover.png" />
-        <meta property="og:type" content="website" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@500&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap"
-        />
-        <style>
-            :root {
-                --olive: #3d4a2e;
-                --sepia: #5c4a3a;
-                --blood: #7a2828;
-                --jaundice: #c2a55a;
-                --graphite: #1a1a1a;
-                --cream: #d4c4a8;
-            }
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            html,
-            body {
-                background: var(--graphite);
-                color: var(--cream);
-                font-family: "Crimson Text", Georgia, serif;
-                line-height: 1.55;
-            }
-            body::before {
-                content: "";
-                position: fixed;
-                inset: 0;
-                pointer-events: none;
-                z-index: 0;
-                background:
-                    repeating-linear-gradient(
-                        0deg,
-                        rgba(196, 165, 90, 0.04) 0 1px,
-                        transparent 1px 4px
-                    ),
-                    radial-gradient(
-                        circle at 30% 20%,
-                        rgba(122, 40, 40, 0.12),
-                        transparent 60%
-                    ),
-                    radial-gradient(
-                        circle at 70% 80%,
-                        rgba(61, 74, 46, 0.18),
-                        transparent 60%
-                    );
-                opacity: 0.85;
-            }
-            img {
-                max-width: 100%;
-                display: block;
-            }
-            a {
-                color: var(--jaundice);
-                text-decoration: none;
-                border-bottom: 1px dashed var(--sepia);
-            }
-            a:hover {
-                color: var(--blood);
-                border-bottom-color: var(--blood);
-            }
-            .banner {
-                width: 100%;
-                aspect-ratio: 21/9;
-                overflow: hidden;
-                border-bottom: 5px solid var(--blood);
-            }
-            .banner img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: contrast(1.1) sepia(0.2) brightness(0.85);
-            }
-            header {
-                text-align: center;
-                padding: 48px 24px 24px;
-                background: linear-gradient(
-                    180deg,
-                    rgba(0, 0, 0, 0.6),
-                    transparent
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tales from the Дед — хоррор-антология</title>
+    <meta name="description" content="Сказки от Деда — ежемесячный хоррор-комикс-антология в стиле EC Comics × Junji Ito.">
+    <meta property="og:title" content="Tales from the Дед">
+    <meta property="og:description" content="Деревня Покровка. Дед варит брагу. Гости приходят — и не уходят.">
+    <meta property="og:image" content="assets/cover/cover.png">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@500&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap">
+    <style>
+        :root {
+            --olive: #3d4a2e;
+            --sepia: #5c4a3a;
+            --blood: #7a2828;
+            --jaundice: #c2a55a;
+            --graphite: #1a1a1a;
+            --cream: #d4c4a8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: var(--graphite);
+            color: var(--cream);
+            font-family: "Crimson Text", Georgia, serif;
+            line-height: 1.55;
+            overflow-x: hidden;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%237a2828' d='M12 2C12 2 13 8 16 10C19 12 22 14 22 17C22 20 18 22 12 22C6 22 2 20 2 17C2 14 5 12 8 10C11 8 12 2 12 2Z'/%3E%3C/svg%3E") 12 12, auto;
+        }
+
+        /* ===== CRT OVERLAY ===== */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9998;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0,0,0,0.15) 0 1px,
+                    transparent 1px 2px
                 );
-            }
-            h1 {
-                font-family: "Special Elite", monospace;
-                font-size: clamp(2.4rem, 5vw, 4.4rem);
-                letter-spacing: 2px;
-                color: var(--blood);
-                text-shadow:
-                    2px 2px 0 var(--graphite),
-                    4px 4px 0 rgba(196, 165, 90, 0.25);
-                line-height: 1;
-            }
-            h1::before,
-            h1::after {
-                content: " 🩸 ";
-                font-size: 0.6em;
-                opacity: 0.7;
-                vertical-align: middle;
-            }
-            .subtitle {
-                font-family: "Caveat", cursive;
-                font-size: clamp(1.2rem, 2.4vw, 1.8rem);
-                color: var(--jaundice);
-                font-style: italic;
-                margin-top: 6px;
-            }
-            .tagline {
-                max-width: 760px;
-                margin: 24px auto 0;
-                font-style: italic;
-                color: var(--cream);
-                opacity: 0.85;
-            }
-            nav.tabs {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 6px;
-                padding: 18px 12px;
-                border-top: 1px dashed var(--sepia);
-                border-bottom: 1px dashed var(--sepia);
-                background: rgba(0, 0, 0, 0.4);
-            }
-            nav.tabs a {
-                padding: 10px 18px;
-                border: 2px solid var(--sepia);
-                background: rgba(40, 30, 20, 0.7);
-                font-family: "Special Elite", monospace;
-                font-size: 0.92rem;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
-            nav.tabs a:hover {
-                background: var(--blood);
-                color: var(--cream);
-                border-color: var(--blood);
-            }
-            main {
-                max-width: 1100px;
-                margin: 0 auto;
-                padding: 48px 22px 72px;
-            }
-            section {
-                margin-bottom: 64px;
-            }
-            section > h2 {
-                font-family: "Special Elite", monospace;
-                color: var(--blood);
-                font-size: 1.7rem;
-                letter-spacing: 1px;
-                border-bottom: 3px double var(--sepia);
-                padding-bottom: 8px;
-                margin-bottom: 24px;
-                text-transform: uppercase;
-            }
-            section > h2::before {
-                content: "☠ ";
-                opacity: 0.8;
-            }
-            .char-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                gap: 22px;
-            }
-            .char-card {
-                background: linear-gradient(
-                    180deg,
-                    rgba(40, 30, 20, 0.85),
-                    rgba(20, 15, 10, 0.95)
-                );
-                border: 2px solid var(--sepia);
-                border-radius: 4px;
-                padding: 18px;
-                transition: 0.25s;
-            }
-            .char-card:hover {
-                transform: translateY(-4px);
-                border-color: var(--blood);
-                box-shadow: 0 8px 22px rgba(122, 40, 40, 0.5);
-            }
-            .char-card .photo {
-                aspect-ratio: 1;
-                background: var(--graphite);
-                border: 1px solid var(--sepia);
-                margin-bottom: 14px;
-                overflow: hidden;
-            }
-            .char-card .photo img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: contrast(1.05) sepia(0.15);
-            }
-            .char-card h3 {
-                font-family: "Special Elite", monospace;
-                color: var(--jaundice);
-                font-size: 1.2rem;
-                margin-bottom: 4px;
-            }
-            .char-card .alias {
-                font-family: "Caveat", cursive;
-                color: var(--blood);
-                font-size: 1.05rem;
-                margin-bottom: 8px;
-                font-style: italic;
-            }
-            .char-card p {
-                font-size: 0.92rem;
-                opacity: 0.88;
-                margin-bottom: 10px;
-            }
-            .char-card .meta {
-                font-family: "Special Elite", monospace;
-                font-size: 0.78rem;
-                color: var(--olive);
-                opacity: 0.7;
-            }
-            .episode {
-                display: grid;
-                grid-template-columns: 120px 1fr;
-                gap: 18px;
-                background: rgba(20, 15, 10, 0.85);
-                border-left: 5px solid var(--blood);
-                padding: 16px;
-                margin-bottom: 16px;
-            }
-            .episode .num {
-                font-family: "Special Elite", monospace;
-                font-size: 3rem;
-                color: var(--blood);
-                text-align: center;
-                line-height: 0.9;
-                border-right: 2px dashed var(--sepia);
-                padding-right: 14px;
-            }
-            .episode h3 {
-                font-family: "Special Elite", monospace;
-                color: var(--jaundice);
-                margin-bottom: 6px;
-            }
-            .episode .meta {
-                font-family: "Special Elite", monospace;
-                font-size: 0.78rem;
-                color: var(--olive);
-                margin-bottom: 8px;
-            }
-            .codex {
-                background: rgba(40, 30, 20, 0.7);
-                border: 1px solid var(--sepia);
-                padding: 18px 22px;
-                margin-bottom: 14px;
-            }
-            .codex strong {
-                color: var(--blood);
-            }
-            footer {
-                text-align: center;
-                padding: 36px 22px;
-                border-top: 3px double var(--sepia);
-                background: rgba(0, 0, 0, 0.7);
-                font-family: "Special Elite", monospace;
-                font-size: 0.85rem;
-                letter-spacing: 1px;
-            }
-            footer .quote {
-                font-family: "Caveat", cursive;
-                font-size: 1.4rem;
-                color: var(--blood);
-                font-style: italic;
-                margin-bottom: 14px;
-                line-height: 1.3;
-            }
-            .blood-drop {
-                position: fixed;
-                top: -30px;
-                width: 14px;
-                height: 30px;
-                background: var(--blood);
-                border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-                transform: rotate(15deg);
-                pointer-events: none;
-                z-index: 99;
-                animation: fall linear forwards;
-            }
-            @keyframes fall {
-                to {
-                    transform: translateY(110vh) rotate(15deg);
-                    opacity: 0;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="banner">
-            <img
-                src="assets/banner/banner.png"
-                alt="Деревня Покровка — Tales from the Дед"
-            />
+            mix-blend-mode: overlay;
+            opacity: 0.6;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.7) 100%);
+            mix-blend-mode: multiply;
+        }
+
+        /* ===== RED VIGNETTE PULSE ===== */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9997;
+            background: radial-gradient(circle at center, transparent 40%, rgba(122,40,40,0.25) 100%);
+            animation: vignettePulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes vignettePulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+
+        /* ===== SCREEN FLICKER ===== */
+        .flicker-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9996;
+            background: rgba(122,40,40,0.03);
+            animation: flicker 0.15s infinite;
+            opacity: 0;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* ===== GLITCH TEXT ===== */
+        .glitch-text {
+            position: relative;
+        }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--graphite);
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff0000;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 #00ff00;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 15px, 0); }
+            20% { clip: rect(50px, 9999px, 60px, 0); }
+            40% { clip: rect(10px, 9999px, 80px, 0); }
+            60% { clip: rect(90px, 9999px, 30px, 0); }
+            80% { clip: rect(40px, 9999px, 70px, 0); }
+            100% { clip: rect(60px, 9999px, 20px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(80px, 9999px, 20px, 0); }
+            20% { clip: rect(10px, 9999px, 50px, 0); }
+            40% { clip: rect(60px, 9999px, 10px, 0); }
+            60% { clip: rect(30px, 9999px, 90px, 0); }
+            80% { clip: rect(70px, 9999px, 40px, 0); }
+            100% { clip: rect(20px, 9999px, 60px, 0); }
+        }
+
+        /* ===== IMAGE GLITCH ON HOVER ===== */
+        .photo img {
+            transition: filter 0.3s, transform 0.3s;
+        }
+        .char-card:hover .photo img {
+            filter: contrast(1.3) sepia(0.3) brightness(1.1) saturate(1.5);
+            transform: scale(1.05);
+        }
+        .glitch-img:hover {
+            animation: img-glitch 0.3s steps(2) infinite;
+        }
+        @keyframes img-glitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            25% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+            50% { transform: translate(2px, -1px); filter: hue-rotate(180deg); }
+            75% { transform: translate(-1px, 2px); filter: hue-rotate(270deg); }
+            100% { transform: translate(0); filter: hue-rotate(360deg); }
+        }
+
+        /* ===== HIDDEN WHISPER TEXT ===== */
+        .whisper {
+            color: rgba(122,40,40,0.08);
+            font-size: 0.85rem;
+            font-family: "Special Elite", monospace;
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            transition: color 0.5s;
+        }
+        .whisper:hover {
+            color: rgba(122,40,40,0.6);
+        }
+
+        /* ===== SCANLINE FLASH ===== */
+        .scan-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: rgba(196,165,90,0.3);
+            pointer-events: none;
+            z-index: 9995;
+            animation: scanMove 6s linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes scanMove {
+            0% { top: -10px; }
+            100% { top: 110vh; }
+        }
+
+        /* ===== SECRET CELLAR LINK ===== */
+        .secret-link {
+            position: fixed;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            opacity: 0.02;
+            z-index: 10000;
+            transition: opacity 0.5s;
+            cursor: pointer;
+        }
+        .secret-link:hover { opacity: 0.6; }
+        .secret-link a {
+            display: block; width: 100%; height: 100%;
+            color: var(--blood); text-decoration: none; border: none;
+        }
+
+        img { max-width: 100%; display: block; }
+        a { color: var(--jaundice); text-decoration: none; border-bottom: 1px dashed var(--sepia); }
+        a:hover { color: var(--blood); border-bottom-color: var(--blood); }
+
+        .banner {
+            width: 100%;
+            aspect-ratio: 21/9;
+            overflow: hidden;
+            border-bottom: 5px solid var(--blood);
+            position: relative;
+        }
+        .banner img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: contrast(1.1) sepia(0.2) brightness(0.85);
+            animation: bannerFlicker 8s infinite;
+        }
+        @keyframes bannerFlicker {
+            0%, 90%, 100% { filter: contrast(1.1) sepia(0.2) brightness(0.85); }
+            92% { filter: contrast(1.5) sepia(0.5) brightness(1.2); }
+            94% { filter: contrast(0.8) sepia(0) brightness(0.5); }
+            96% { filter: contrast(1.1) sepia(0.2) brightness(0.85); }
+        }
+
+        header {
+            text-align: center;
+            padding: 48px 24px 24px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
+            position: relative;
+        }
+        h1 {
+            font-family: "Special Elite", monospace;
+            font-size: clamp(2.4rem, 5vw, 4.4rem);
+            letter-spacing: 2px;
+            color: var(--blood);
+            text-shadow: 2px 2px 0 var(--graphite), 4px 4px 0 rgba(196,165,90,0.25);
+            line-height: 1;
+        }
+        h1::before, h1::after { content: " 🩸 "; font-size: 0.6em; opacity: 0.7; vertical-align: middle; }
+
+        .subtitle {
+            font-family: "Caveat", cursive;
+            font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+            color: var(--jaundice); font-style: italic; margin-top: 6px;
+        }
+        .tagline {
+            max-width: 760px; margin: 24px auto 0;
+            font-style: italic; color: var(--cream); opacity: 0.85;
+        }
+
+        nav.tabs {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+            padding: 18px 12px;
+            border-top: 1px dashed var(--sepia);
+            border-bottom: 1px dashed var(--sepia);
+            background: rgba(0,0,0,0.4);
+        }
+        nav.tabs a {
+            padding: 10px 18px; border: 2px solid var(--sepia);
+            background: rgba(40,30,20,0.7);
+            font-family: "Special Elite", monospace; font-size: 0.92rem;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        nav.tabs a:hover { background: var(--blood); color: var(--cream); border-color: var(--blood); }
+
+        main { max-width: 1100px; margin: 0 auto; padding: 48px 22px 72px; position: relative; }
+        section { margin-bottom: 64px; position: relative; }
+        section > h2 {
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: 1.7rem; letter-spacing: 1px;
+            border-bottom: 3px double var(--sepia);
+            padding-bottom: 8px; margin-bottom: 24px; text-transform: uppercase;
+        }
+        section > h2::before { content: "☠ "; opacity: 0.8; }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+        .char-card {
+            background: linear-gradient(180deg, rgba(40,30,20,0.85), rgba(20,15,10,0.95));
+            border: 2px solid var(--sepia); border-radius: 4px;
+            padding: 18px; transition: 0.25s;
+        }
+        .char-card:hover {
+            transform: translateY(-4px); border-color: var(--blood);
+            box-shadow: 0 8px 22px rgba(122,40,40,0.5);
+        }
+        .char-card .photo {
+            aspect-ratio: 1; background: var(--graphite);
+            border: 1px solid var(--sepia); margin-bottom: 14px;
+            overflow: hidden; position: relative;
+        }
+        .char-card .photo img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) sepia(0.15); }
+        .char-card h3 { font-family: "Special Elite", monospace; color: var(--jaundice); font-size: 1.2rem; margin-bottom: 4px; }
+        .char-card .alias { font-family: "Caveat", cursive; color: var(--blood); font-size: 1.05rem; margin-bottom: 8px; font-style: italic; }
+        .char-card p { font-size: 0.92rem; opacity: 0.88; margin-bottom: 10px; }
+        .char-card .meta { font-family: "Special Elite", monospace; font-size: 0.78rem; color: var(--olive); opacity: 0.7; }
+
+        .episode {
+            display: grid; grid-template-columns: 120px 1fr; gap: 18px;
+            background: rgba(20,15,10,0.85); border-left: 5px solid var(--blood);
+            padding: 16px; margin-bottom: 16px;
+        }
+        .episode .num {
+            font-family: "Special Elite", monospace; font-size: 3rem;
+            color: var(--blood); text-align: center; line-height: 0.9;
+            border-right: 2px dashed var(--sepia); padding-right: 14px;
+        }
+        .episode h3 { font-family: "Special Elite", monospace; color: var(--jaundice); margin-bottom: 6px; }
+        .episode .meta { font-family: "Special Elite", monospace; font-size: 0.78rem; color: var(--olive); margin-bottom: 8px; }
+
+        .codex {
+            background: rgba(40,30,20,0.7); border: 1px solid var(--sepia);
+            padding: 18px 22px; margin-bottom: 14px;
+        }
+        .codex strong { color: var(--blood); }
+
+        footer {
+            text-align: center; padding: 36px 22px;
+            border-top: 3px double var(--sepia);
+            background: rgba(0,0,0,0.7);
+            font-family: "Special Elite", monospace; font-size: 0.85rem; letter-spacing: 1px;
+        }
+        footer .quote { font-family: "Caveat", cursive; font-size: 1.4rem; color: var(--blood); font-style: italic; margin-bottom: 14px; line-height: 1.3; }
+
+        .blood-drop {
+            position: fixed; top: -30px; width: 14px; height: 30px;
+            background: var(--blood); border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+            transform: rotate(15deg); pointer-events: none; z-index: 99;
+            animation: fall linear forwards;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(15deg); opacity: 0; } }
+
+        /* Invert flash */
+        .invert-flash { animation: invertFlash 0.1s; }
+        @keyframes invertFlash { 0%, 100% { filter: invert(0); } 50% { filter: invert(1); } }
+    </style>
+</head>
+<body>
+    <div class="vignette"></div>
+    <div class="flicker-layer"></div>
+    <div class="scan-flash"></div>
+
+    <!-- Hidden whispers -->
+    <div class="whisper" style="top: 12%; left: 5%;">он смотрит</div>
+    <div class="whisper" style="top: 35%; right: 8%;">не спи</div>
+    <div class="whisper" style="top: 62%; left: 3%;">погреб открыт</div>
+    <div class="whisper" style="top: 88%; right: 5%;">ты следующий</div>
+
+    <div class="banner">
+        <img src="assets/banner/banner.png" alt="Деревня Покровка — Tales from the Дед">
+    </div>
+
+    <header>
+        <h1 class="glitch-text" data-text="Tales from the Дед">Tales from the Дед</h1>
+        <div class="subtitle">Сказки от Деда — ежемесячный хоррор</div>
+        <p class="tagline">Деревня Покровка застыла где-то между 1928 и 1991. Дед варит брагу особого назначения. Гости приходят — и не уходят. Но сначала они ломают себе жизнь сами.</p>
+    </header>
+
+    <nav class="tabs">
+        <a href="#cast">Каст</a>
+        <a href="#episodes">Выпуски</a>
+        <a href="#codex">Кодекс</a>
+        <a href="#lore">Лор</a>
+        <a href="brand-book/kolya/index.html">Brand-book: Коля</a>
+    </nav>
+
+    <main>
+        <section id="cast">
+            <h2>Каст деревни Покровка</h2>
+            <div class="char-grid">
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/ded.png" alt="Дед"></div>
+                    <h3>Дед</h3>
+                    <div class="alias">Хозяин браги</div>
+                    <p>70+, беззубый, в ушанке. Варит брагу, в которую идут гости. Улыбается как хищник, который уже поел.</p>
+                    <div class="meta">SEASON 1–∞ · Угроза: ☠☠☠☠☠</div>
+                </div>
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/kolya.png" alt="Коля-Гиббон"></div>
+                    <h3>Коля «Гиббон»</h3>
+                    <div class="alias">Bellov-патриарх</div>
+                    <p>40, бритая голова, выбитые передние зубы, тату «GOLD CHAT» на лбу. Грызёт как бродячий пёс.</p>
+                    <div class="meta">SEASON 1 · Угроза: ☠☠☠</div>
+                </div>
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/alenka.png" alt="Алёнка-Пропитуха"></div>
+                    <h3>Алёнка «Пропитуха»</h3>
+                    <div class="alias">Gibbonikha, propituha 2.0</div>
+                    <p>43, бритая центральная полоса, бородавки по всему лицу. Худая. Контраст: жаба без грима → куколка с гримом.</p>
+                    <div class="meta">SEASON 1 · Угроза: ☠☠</div>
+                </div>
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/mila-vitek.png" alt="Мила + Витек"></div>
+                    <h3>Мила + Витек</h3>
+                    <div class="alias">Адские помощники из СПб</div>
+                    <p>Тату-пара: полная дама с черепами и патлатый мужчина. Подначивают гостей к хаосу.</p>
+                    <div class="meta">SEASON 1+ · Угроза: ☠☠☠☠</div>
+                </div>
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/kuroles.png" alt="Куролес"></div>
+                    <h3>Куролес</h3>
+                    <div class="alias">Андрей, интеллигент</div>
+                    <p>35, теряет в карты. Считает, что умный — значит не жертва. Ошибается.</p>
+                    <div class="meta">SEASON 2 · Угроза: ☠</div>
+                </div>
+                <div class="char-card">
+                    <div class="photo"><img class="glitch-img" src="assets/characters/mikhaylovna.png" alt="Алла Михайловна"></div>
+                    <h3>Алла Михайловна</h3>
+                    <div class="alias">Бывшая красавица</div>
+                    <p>55, была красивой. Пьёт, стареет, торгуется с чёрными рекрутёрами.</p>
+                    <div class="meta">SEASON 2 · Угроза: ☠</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="episodes">
+            <h2>Выпуски</h2>
+            <div class="episode">
+                <div class="num">#0</div>
+                <div>
+                    <h3>«Пилот: Первый гость»</h3>
+                    <div class="meta">Дед · Мила + Витек · одна случайная жертва</div>
+                    <p>Три дня из жизни Деда и его адских помощников. Гость приходит. Гость думает, что он гость. Гость ошибается.</p>
+                </div>
+            </div>
+            <div class="episode">
+                <div class="num">#1</div>
+                <div>
+                    <h3>«Работник Нестор»</h3>
+                    <div class="meta">Дед · Куролес + Михайловна</div>
+                    <p>Куролес берётся за летнюю подработку в хозяйстве. Михайловна подозревает неладное. Дед наблюдает.</p>
+                </div>
+            </div>
+            <div class="episode">
+                <div class="num">#2</div>
+                <div>
+                    <h3>«Любимчик Гриша»</h3>
+                    <div class="meta">Дед · Внук-Любимчик · Бабка</div>
+                    <p>Бабка хочет спасти внука от Деда. Внук хочет стать Дедом.</p>
+                </div>
+            </div>
+            <div class="episode">
+                <div class="num">#3</div>
+                <div>
+                    <h3>«Урожай»</h3>
+                    <div class="meta">Дед · семья Белловых · все вместе</div>
+                    <p>Коля и Алёнка приходят попросить в долг. Дед угощает. Белловы уходят домой. Дома их уже ждут Мила и Витек.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="codex">
+            <h2>Каноны серии</h2>
+            <div class="codex"><strong>Сеттинг.</strong> Деревня Покровка, ~1930–1991, застывшая в советской паузе.</div>
+            <div class="codex"><strong>Тон.</strong> Трагикомический хоррор. Юмор сухой, русский, деревенский, садистский. Насилие — намёками.</div>
+            <div class="codex"><strong>Стиль.</strong> EC Comics × Junji Ito × русская гравюра. Палитра: оливковый, сепия, красный, желтушный, графит.</div>
+            <div class="codex"><strong>Цикл.</strong> Двухсезонный: «Хищники» + «Жертвы». В каждом эпизоде жертва виновна сама.</div>
+        </section>
+
+        <section id="lore">
+            <h2>Лор по каплям</h2>
+            <div class="codex"><strong>Брага особого назначения.</strong> Дед варит её из воды, сахара, дрожжей и того, что остаётся после гостей.</div>
+            <div class="codex"><strong>Адские помощники.</strong> Мила и Витек работают на Деда «по контракту». Подначивают семьи к хаосу — Дед собирает «урожай» отчаяния.</div>
+            <div class="codex"><strong>Погреб.</strong> Под избой Деда — стеллажи с банками засолки, под банками — вещи пропавших.</div>
+            <div class="codex"><strong>Чёрные рекрутёры.</strong> Не служат Деду напрямую. Но после их визитов в дом приходят адские помощники.</div>
+            <div class="codex"><strong>Вечная память.</strong> В каждом выпуске кто-то получает траурный портрет с подписью «Покойник № N».</div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="quote">«Гостю дорогому — первый стакан.<br>Хозяину терпеливому — последний.»</div>
+        <div>— из погреба Деда</div>
+        <div style="margin-top: 18px; font-size: 0.78rem; opacity: 0.6">
+            © 2026 metapeka · CC BY-NC-SA 4.0 ·
+            <a href="README.md">README</a> ·
+            <a href="SUPPORTING.md">SUPPORTING</a> ·
+            <a href="LICENSE">LICENSE</a> ·
+            <a href="CONTRIBUTING.md">CONTRIBUTING</a>
         </div>
+    </footer>
 
-        <header>
-            <h1>Tales from the Дед</h1>
-            <div class="subtitle">Сказки от Деда — ежемесячный хоррор</div>
-            <p class="tagline">
-                Деревня Покровка застыла где-то между 1928 и 1991. Дед варит
-                брагу особого назначения. Гости приходят — и не уходят. Но
-                сначала они ломают себе жизнь сами.
-            </p>
-        </header>
+    <!-- Secret cellar link -->
+    <div class="secret-link" title=""><a href="cellar.html">█</a></div>
 
-        <nav class="tabs">
-            <a href="#cast">Каст</a>
-            <a href="#episodes">Выпуски</a>
-            <a href="#codex">Кодекс</a>
-            <a href="#lore">Лор</a>
-            <a href="brand-book/kolya/index.html">Brand-book: Коля</a>
-        </nav>
+    <script>
+        /* ===== BLOOD DROPS ===== */
+        function bloodDrop() {
+            const d = document.createElement("div");
+            d.className = "blood-drop";
+            d.style.left = Math.random() * 100 + "vw";
+            d.style.animationDuration = 5 + Math.random() * 4 + "s";
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 9000);
+        }
+        setInterval(bloodDrop, 17000);
 
-        <main>
-            <section id="cast">
-                <h2>Каст деревни Покровка</h2>
-                <div class="char-grid">
-                    <div class="char-card">
-                        <div class="photo">
-                            <img src="assets/characters/ded.png" alt="Дед" />
-                        </div>
-                        <h3>Дед</h3>
-                        <div class="alias">Хозяин браги</div>
-                        <p>
-                            70+, беззубый, в ушанке. Варит брагу, в которую идут
-                            гости. Улыбается как хищник, который уже поел.
-                        </p>
-                        <div class="meta">SEASON 1–∞ · Угроза: ☠☠☠☠☠</div>
-                    </div>
-                    <div class="char-card">
-                        <div class="photo">
-                            <img
-                                src="assets/characters/kolya.png"
-                                alt="Коля-Гиббон"
-                            />
-                        </div>
-                        <h3>Коля «Гиббон»</h3>
-                        <div class="alias">Bellov-патриарх</div>
-                        <p>
-                            40, бритая голова, выбитые передние зубы, тату «GOLD
-                            CHAT» на лбу. Грызёт как бродячий пёс.
-                        </p>
-                        <div class="meta">SEASON 1 · Угроза: ☠☠☠</div>
-                    </div>
-                    <div class="char-card">
-                        <div class="photo">
-                            <img
-                                src="assets/characters/alenka.png"
-                                alt="Алёнка-Пропитуха"
-                            />
-                        </div>
-                        <h3>Алёнка «Пропитуха»</h3>
-                        <div class="alias">Gibbonikha, propituha 2.0</div>
-                        <p>
-                            43, бритая центральная полоса, бородавки по всему
-                            лицу. Худая. Контраст: жаба без грима → куколка с
-                            гримом.
-                        </p>
-                        <div class="meta">SEASON 1 · Угроза: ☠☠</div>
-                    </div>
-                    <div class="char-card">
-                        <div class="photo">
-                            <img
-                                src="assets/characters/mila-vitek.png"
-                                alt="Мила + Витек"
-                            />
-                        </div>
-                        <h3>Мила + Витек</h3>
-                        <div class="alias">Адские помощники из СПб</div>
-                        <p>
-                            Тату-пара: полная дама с черепами и патлатый
-                            мужчина. Подначивают гостей к хаосу.
-                        </p>
-                        <div class="meta">SEASON 1+ · Угроза: ☠☠☠☠</div>
-                    </div>
-                    <div class="char-card">
-                        <div class="photo">
-                            <img
-                                src="assets/characters/kuroles.png"
-                                alt="Куролес"
-                            />
-                        </div>
-                        <h3>Куролес</h3>
-                        <div class="alias">Андрей, интеллигент</div>
-                        <p>
-                            35, теряет в карты. Считает, что умный — значит не
-                            жертва. Ошибается.
-                        </p>
-                        <div class="meta">SEASON 2 · Угроза: ☠</div>
-                    </div>
-                    <div class="char-card">
-                        <div class="photo">
-                            <img
-                                src="assets/characters/mikhaylovna.png"
-                                alt="Алла Михайловна"
-                            />
-                        </div>
-                        <h3>Алла Михайловна</h3>
-                        <div class="alias">Бывшая красавица</div>
-                        <p>
-                            55, была красивой. Пьёт, стареет, торгуется с
-                            чёрными рекрутёрами.
-                        </p>
-                        <div class="meta">SEASON 2 · Угроза: ☠</div>
-                    </div>
-                </div>
-            </section>
+        /* ===== TITLE CYCLER ===== */
+        const titles = [
+            "Tales from the Дед — хоррор-антология",
+            "Он видит тебя",
+            "Не выключай",
+            "Погреб открыт",
+            "Гости приходят — и не уходят",
+            "Tales from the Дед — хоррор-антология"
+        ];
+        let tIdx = 0;
+        setInterval(() => {
+            tIdx = (tIdx + 1) % titles.length;
+            document.title = titles[tIdx];
+        }, 8000);
 
-            <section id="episodes">
-                <h2>Выпуски</h2>
-                <div class="episode">
-                    <div class="num">#0</div>
-                    <div>
-                        <h3>«Пилот: Первый гость»</h3>
-                        <div class="meta">
-                            Дед · Мила + Витек · одна случайная жертва
-                        </div>
-                        <p>
-                            Три дня из жизни Деда и его адских помощников. Гость
-                            приходит. Гость думает, что он гость. Гость
-                            ошибается.
-                        </p>
-                    </div>
-                </div>
-                <div class="episode">
-                    <div class="num">#1</div>
-                    <div>
-                        <h3>«Работник Нестор»</h3>
-                        <div class="meta">Дед · Куролес + Михайловна</div>
-                        <p>
-                            Куролес берётся за летнюю подработку в хозяйстве.
-                            Михайловна подозревает неладное. Дед наблюдает.
-                        </p>
-                    </div>
-                </div>
-                <div class="episode">
-                    <div class="num">#2</div>
-                    <div>
-                        <h3>«Любимчик Гриша»</h3>
-                        <div class="meta">Дед · Внук-Любимчик · Бабка</div>
-                        <p>
-                            Бабка хочет спасти внука от Деда. Внук хочет стать
-                            Дедом.
-                        </p>
-                    </div>
-                </div>
-                <div class="episode">
-                    <div class="num">#3</div>
-                    <div>
-                        <h3>«Урожай»</h3>
-                        <div class="meta">
-                            Дед · семья Белловых · все вместе
-                        </div>
-                        <p>
-                            Коля и Алёнка приходят попросить в долг. Дед
-                            угощает. Белловы уходят домой. Дома их уже ждут Мила
-                            и Витек.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="codex">
-                <h2>Каноны серии</h2>
-                <div class="codex">
-                    <strong>Сеттинг.</strong> Деревня Покровка, ~1930–1991,
-                    застывшая в советской паузе.
-                </div>
-                <div class="codex">
-                    <strong>Тон.</strong> Трагикомический хоррор. Юмор сухой,
-                    русский, деревенский, садистский. Насилие — намёками.
-                </div>
-                <div class="codex">
-                    <strong>Стиль.</strong> EC Comics × Junji Ito × русская
-                    гравюра. Палитра: оливковый, сепия, красный, желтушный,
-                    графит.
-                </div>
-                <div class="codex">
-                    <strong>Цикл.</strong> Двухсезонный: «Хищники» + «Жертвы». В
-                    каждом эпизоде жертва виновна сама.
-                </div>
-            </section>
-
-            <section id="lore">
-                <h2>Лор по каплям</h2>
-                <div class="codex">
-                    <strong>Брага особого назначения.</strong> Дед варит её из
-                    воды, сахара, дрожжей и того, что остаётся после гостей.
-                </div>
-                <div class="codex">
-                    <strong>Адские помощники.</strong> Мила и Витек работают на
-                    Деда «по контракту». Подначивают семьи к хаосу — Дед
-                    собирает «урожай» отчаяния.
-                </div>
-                <div class="codex">
-                    <strong>Погреб.</strong> Под избой Деда — стеллажи с банками
-                    засолки, под банками — вещи пропавших.
-                </div>
-                <div class="codex">
-                    <strong>Чёрные рекрутёры.</strong> Не служат Деду напрямую.
-                    Но после их визитов в дом приходят адские помощники.
-                </div>
-                <div class="codex">
-                    <strong>Вечная память.</strong> В каждом выпуске кто-то
-                    получает траурный портрет с подписью «Покойник № N».
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div class="quote">
-                «Гостю дорогому — первый стакан.<br />Хозяину терпеливому —
-                последний.»
-            </div>
-            <div>— из погреба Деда</div>
-            <div style="margin-top: 18px; font-size: 0.78rem; opacity: 0.6">
-                © 2026 metapeka · CC BY-NC-SA 4.0 ·
-                <a href="README.md">README</a> ·
-                <a href="SUPPORTING.md">SUPPORTING</a> ·
-                <a href="LICENSE">LICENSE</a> ·
-                <a href="CONTRIBUTING.md">CONTRIBUTING</a>
-            </div>
-        </footer>
-
-        <script>
-            function bloodDrop() {
-                const d = document.createElement("div");
-                d.className = "blood-drop";
-                d.style.left = Math.random() * 100 + "vw";
-                d.style.animationDuration = 5 + Math.random() * 4 + "s";
-                document.body.appendChild(d);
-                setTimeout(() => d.remove(), 9000);
+        /* ===== CONSOLE HORROR ===== */
+        const consoleMsgs = [
+            "Дед знает, что ты открыл консоль.",
+            "Погреб глубже, чем ты думаешь.",
+            "Не копайся в чужом браузере.",
+            "Ты уже здесь. Ты не уйдёшь.",
+            "Брага варится. Ты — следующий ингредиент.",
+            "Мила и Витек записали твой IP.",
+            "%cПосмотри за спиной.", "color: #7a2828; font-size: 14px; font-weight: bold;"
+        ];
+        consoleMsgs.forEach((m, i) => {
+            if (typeof m === "string" && i < consoleMsgs.length - 1 && typeof consoleMsgs[i+1] === "string" && consoleMsgs[i+1].startsWith("color:")) {
+                console.log(m, consoleMsgs[i+1]);
+            } else if (typeof m === "string" && !(i > 0 && typeof consoleMsgs[i-1] === "string" && consoleMsgs[i].startsWith("color:"))) {
+                console.log("%c" + m, "color: #5c4a3a; font-family: monospace;");
             }
-            setInterval(bloodDrop, 17000);
-        </script>
-    </body>
+        });
+
+        /* ===== RANDOM GLITCH FLASHES ===== */
+        function randomGlitch() {
+            const body = document.body;
+            body.classList.add("invert-flash");
+            setTimeout(() => body.classList.remove("invert-flash"), 100);
+        }
+        setInterval(() => {
+            if (Math.random() < 0.08) randomGlitch();
+        }, 5000);
+
+        /* ===== RANDOM SCANLINE BURST ===== */
+        function scanBurst() {
+            const el = document.querySelector(".scan-flash");
+            el.style.animationDuration = "0.3s";
+            setTimeout(() => el.style.animationDuration = "6s", 2000);
+        }
+        setInterval(() => {
+            if (Math.random() < 0.15) scanBurst();
+        }, 12000);
+
+        /* ===== WEB AUDIO HORROR ===== */
+        let audioCtx = null;
+        let droneOsc = null;
+        let droneGain = null;
+        let clickInterval = null;
+        let dripInterval = null;
+        let whisperInterval = null;
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Low drone
+            droneOsc = audioCtx.createOscillator();
+            droneGain = audioCtx.createGain();
+            droneOsc.type = "sawtooth";
+            droneOsc.frequency.value = 55; // A1-ish
+            droneGain.gain.value = 0.015;
+            droneOsc.connect(droneGain);
+            droneGain.connect(audioCtx.destination);
+            droneOsc.start();
+
+            // Subtle LFO on drone
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            lfo.type = "sine";
+            lfo.frequency.value = 0.1;
+            lfoGain.gain.value = 2;
+            lfo.connect(lfoGain);
+            lfoGain.connect(droneOsc.frequency);
+            lfo.start();
+
+            // Random clicks / creaks
+            clickInterval = setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const osc = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    const f = 200 + Math.random() * 800;
+                    osc.type = "square";
+                    osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(f * 0.5, audioCtx.currentTime + 0.05);
+                    g.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                    osc.connect(g);
+                    g.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.12);
+                }
+            }, 4000);
+
+            // Drips
+            dripInterval = setInterval(() => {
+                if (Math.random() < 0.4) {
+                    const osc = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.15);
+                    g.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    osc.connect(g);
+                    g.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                }
+            }, 7000);
+
+            // Whisper noise (filtered white noise)
+            whisperInterval = setInterval(() => {
+                if (Math.random() < 0.2) {
+                    const bufferSize = audioCtx.sampleRate * 0.5;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = "bandpass";
+                    filter.frequency.value = 2000 + Math.random() * 2000;
+                    filter.Q.value = 0.5;
+                    const g = audioCtx.createGain();
+                    g.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                    noise.connect(filter);
+                    filter.connect(g);
+                    g.connect(audioCtx.destination);
+                    noise.start();
+                }
+            }, 15000);
+        }
+
+        // Unlock audio on first interaction
+        document.addEventListener("click", initAudio, { once: true });
+        document.addEventListener("scroll", initAudio, { once: true });
+        document.addEventListener("keydown", initAudio, { once: true });
+    </script>
+</body>
 </html>
