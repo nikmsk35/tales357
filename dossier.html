@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДОСЬЕ — Tales from the Дед</title>
+    <style>
+        :root { --blood: #7a2828; --graphite: #0a0a0a; --sepia: #3a2a1a; --cream: #8a7a5a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            background: var(--graphite);
+            color: var(--cream);
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0 1px, transparent 1px 3px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            padding: 40px;
+            max-width: 700px;
+        }
+        h1 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            color: var(--blood);
+            text-shadow: 0 0 20px rgba(122,40,40,0.5);
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+        }
+        .dossier-label {
+            color: #3a2a1a;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        .data-row {
+            text-align: left;
+            padding: 12px 20px;
+            border-bottom: 1px dashed #2a1a0a;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .data-row .label { color: #4a3a2a; }
+        .data-row .value { color: #8a7a5a; font-weight: bold; }
+        .quote {
+            margin-top: 40px;
+            font-style: italic;
+            color: #5a4a3a;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .warning {
+            margin-top: 30px;
+            color: var(--blood);
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(122,40,40,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .back {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--blood);
+            text-decoration: none;
+            border: 1px solid var(--blood);
+            padding: 12px 24px;
+        }
+        .back:hover { background: var(--blood); color: var(--graphite); }
+        .eye {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff0000 20%, #000 60%);
+            opacity: 0;
+            pointer-events: none;
+            animation: blink 5s infinite;
+        }
+        .eye:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .eye:nth-child(2) { top: 80%; right: 15%; animation-delay: 2s; }
+        .eye:nth-child(3) { bottom: 20%; left: 30%; animation-delay: 4s; }
+        @keyframes blink { 0%, 90%, 100% { opacity: 0; } 5% { opacity: 0.8; } 10% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="eye"></div>
+    <div class="eye"></div>
+    <div class="eye"></div>
+
+    <div class="container">
+        <h1>ДОСЬЕ</h1>
+        <div class="dossier-label">КОНФИДЕНЦИАЛЬНО — ТОЛЬКО ДЛЯ ДЕДА</div>
+
+        <div class="data-row">
+            <span class="label">IP-адрес:</span>
+            <span class="value" id="ip">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Браузер:</span>
+            <span class="value" id="browser">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">ОС:</span>
+            <span class="value" id="os">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Разрешение экрана:</span>
+            <span class="value" id="screen">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Язык:</span>
+            <span class="value" id="lang">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Часовой пояс:</span>
+            <span class="value" id="tz">загрузка...</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Количество визитов:</span>
+            <span class="value" id="visits">1</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Время на сайте:</span>
+            <span class="value" id="timeOnSite">0 сек</span>
+        </div>
+
+        <div class="quote">
+            «Мы знаем, кто ты.<br>
+            Мы знаем, откуда ты.<br>
+            И мы знаем, что ты всё ещё читаешь.»
+        </div>
+
+        <div class="warning">⚠️ ДОСЬЕ ОБНОВЛЯЕТСЯ В РЕАЛЬНОМ ВРЕМЕНИ</div>
+
+        <a href="index.html" class="back">← Закрыть досье</a>
+    </div>
+
+    <script>
+        // Gather browser data
+        document.getElementById("browser").textContent = navigator.userAgent.split("/")[0].split(" ")[0];
+        document.getElementById("os").textContent = navigator.platform;
+        document.getElementById("screen").textContent = screen.width + "x" + screen.height;
+        document.getElementById("lang").textContent = navigator.language;
+        document.getElementById("tz").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Visits counter
+        let visits = parseInt(localStorage.getItem("ded_visits") || "0") + 1;
+        localStorage.setItem("ded_visits", visits);
+        document.getElementById("visits").textContent = visits;
+
+        // Time on site
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            document.getElementById("timeOnSite").textContent = seconds + " сек";
+        }, 1000);
+
+        // Try to get IP (via public API, may fail due to CORS, that's fine)
+        fetch("https://api.ipify.org?format=json")
+            .then(r => r.json())
+            .then(data => { document.getElementById("ip").textContent = data.ip; })
+            .catch(() => { document.getElementById("ip").textContent = "скрыт (но Дед знает)"; });
+
+        // Console message
+        console.log("%cДОСЬЕ", "color: #7a2828; font-size: 24px; font-family: monospace;");
+        console.log("%cТы сам пришёл сюда. Не мы тебя звали. Не мы тебя звали.", "color: #5c4a3a; font-family: monospace;");
+    </script>
+</body>
+</html>
