@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погреб — Tales from the Дед</title>
+    <style>
+        :root {
+            --blood: #7a2828;
+            --graphite: #0f0f0f;
+            --sepia: #3a2a1a;
+            --cream: #7a6a4a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            background: var(--graphite);
+            color: var(--cream);
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0 1px, transparent 1px 2px);
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9998;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.9) 100%);
+        }
+
+        .wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            font-family: "Courier New", monospace;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            color: var(--blood);
+            text-shadow: 0 0 10px rgba(122,40,40,0.4);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            color: #4a3a2a;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+        .typewriter {
+            border-left: 3px solid var(--blood);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            min-height: 80px;
+        }
+        .typewriter p {
+            font-size: 1.05rem;
+            color: #8a7a5a;
+        }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background: var(--blood);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .shelf {
+            border: 1px solid var(--sepia);
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .shelf h3 {
+            color: var(--blood);
+            font-size: 1rem;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .shelf ul { list-style: none; }
+        .shelf li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #2a1a0a;
+            font-size: 0.95rem;
+            color: #6a5a3a;
+        }
+        .shelf li:last-child { border-bottom: none; }
+        .shelf li .date { color: #3a2a1a; float: right; }
+
+        .counter {
+            text-align: center;
+            margin: 60px 0;
+            padding: 30px;
+            border: 2px solid var(--blood);
+            background: rgba(122,40,40,0.05);
+        }
+        .counter .label { color: #4a3a2a; font-size: 0.9rem; margin-bottom: 8px; }
+        .counter .num { font-size: 3rem; color: var(--blood); letter-spacing: 4px; }
+        .counter .note { color: #3a2a1a; font-size: 0.8rem; margin-top: 8px; }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 60px;
+            color: var(--blood);
+            text-decoration: none;
+            border: 1px solid var(--blood);
+            padding: 12px 24px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .back:hover { background: var(--blood); color: var(--graphite); }
+
+        .hidden-msg {
+            color: rgba(122,40,40,0.06);
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 40px;
+            user-select: none;
+            transition: color 2s;
+        }
+        .hidden-msg:hover { color: rgba(122,40,40,0.6); }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>ПОГРЕБ</h1>
+        <div class="subtitle">nikmsk35.github.io/tales357/cellar.html</div>
+
+        <div class="typewriter">
+            <p id="type-text"></p><span class="cursor"></span>
+        </div>
+
+        <div class="shelf">
+            <h3>Стеллаж «Вещи пропавших»</h3>
+            <ul>
+                <li>Золотые часы без циферблата <span class="date">— июнь 2026</span></li>
+                <li>Кроссовки, 43 размер, левый без шнурка <span class="date">— май 2026</span></li>
+                <li>Обручальное кольцо, внутри выгравировано «Н» <span class="date">— апрель 2026</span></li>
+                <li>Кошелёк, 3400 руб., визитка таксиста <span class="date">— март 2026</span></li>
+                <li>Детская погремушка, деревянная, без язычка <span class="date">— февраль 2026</span></li>
+                <li>Телефон Samsung, разряжен, 17 пропущенных <span class="date">— январь 2026</span></li>
+                <li>Паспорт, фото перечёркнуто красным фломастером <span class="date">— декабрь 2025</span></li>
+            </ul>
+        </div>
+
+        <div class="shelf">
+            <h3>Банки засолки</h3>
+            <ul>
+                <li>Банка № 1 — «Гость № 1, 2025» <span class="date">Закрыта</span></li>
+                <li>Банка № 2 — «Гость № 2, 2026» <span class="date">Закрыта</span></li>
+                <li>Банка № 3 — «К.Б.» <span class="date">Закрыта</span></li>
+                <li>Банка № 4 — «А.М.» <span class="date">Закрыта</span></li>
+                <li>Банка № 5 — <span class="date">ПУСТАЯ</span></li>
+                <li>Банка № 6 — <span class="date">ПУСТАЯ</span></li>
+                <li>Банка № 7 — <span class="date">ПУСТАЯ</span></li>
+            </ul>
+        </div>
+
+        <div class="counter">
+            <div class="label">ДНЕЙ ДО СЛЕДУЮЩЕГО УРОЖАЯ</div>
+            <div class="num" id="countdown">14</div>
+            <div class="note">Дед уже знает, кто придёт.</div>
+        </div>
+
+        <a href="index.html" class="back">← Закрыть люк и уйти</a>
+
+        <div class="hidden-msg">
+            Если ты это читаешь — значит ты не случайный гость.<br>
+            Проверь консоль. Но осторожно: там тоже темно.
+        </div>
+    </div>
+
+    <script>
+        // Typewriter effect
+        const text = "Ты спустился слишком глубоко. Здесь пахнет солью, уксусом и чем-то ещё. Чем-то, что не имеет названия. На стеллажах — вещи тех, кто приходил до тебя. Банки пустеют. Но всегда находятся новые.";
+        const el = document.getElementById("type-text");
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                el.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, 40 + Math.random() * 60);
+            }
+        }
+        type();
+
+        // Countdown randomizer
+        setInterval(() => {
+            const n = document.getElementById("countdown");
+            let v = parseInt(n.textContent);
+            if (Math.random() < 0.3) v = Math.max(1, v - 1);
+            else if (Math.random() < 0.1) v += 1;
+            n.textContent = v;
+        }, 5000);
+
+        // Console message
+        console.log("%cПОГРЕБ", "color: #7a2828; font-size: 24px; font-family: monospace;");
+        console.log("%cТы не должен был сюда попадать. Но теперь, когда ты здесь — Дед знает твоё имя.", "color: #5c4a3a; font-family: monospace;");
+        console.log("%cБанка № 7 ждёт владельца.", "color: #3a2a1a; font-family: monospace;");
+    </script>
+</body>
+</html>
