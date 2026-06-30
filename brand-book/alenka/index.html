@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALYONKA THE PROPITUHA — Character Bible</title>
+  <style>
+    :root {
+      --bg: #1a1410; --text: #d4c8a8; --accent: #8b0000; --border: #4a3424;
+      --panel: #221913; --muted: #a99977; --paper: #2b2018; --shadow: rgba(0,0,0,0.45);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, rgba(139,0,0,0.08), transparent 35%), linear-gradient(180deg, #21170f 0%, var(--bg) 100%);
+      color: var(--text); font-family: "Courier New", Courier, monospace; line-height: 1.6;
+    }
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 28px 20px 56px; }
+    .hero {
+      border: 2px solid var(--border); background: linear-gradient(180deg, rgba(255,220,160,0.04), rgba(0,0,0,0.15)), var(--paper);
+      padding: 28px; box-shadow: 0 16px 40px var(--shadow), inset 0 0 80px rgba(0,0,0,0.18);
+      position: relative; overflow: hidden; margin-bottom: 24px;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); color: #eadfbf; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 2px 0 #000, 0 0 18px rgba(139,0,0,0.25); }
+    .subtitle { font-size: 1.1rem; color: #c8b690; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; }
+    .back { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 8px 16px; }
+    .back:hover { background: var(--accent); color: var(--bg); }
+    section { margin-top: 24px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.12)); padding: 22px; box-shadow: 0 10px 24px var(--shadow); }
+    h2 { font-size: 1.5rem; color: #f0e6c8; text-transform: uppercase; border-left: 6px solid var(--accent); padding-left: 12px; margin-bottom: 18px; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .card { border: 1px solid var(--border); background: rgba(0,0,0,0.16); padding: 14px; }
+    .card h3 { color: #efdfbd; margin-bottom: 8px; font-size: 1rem; text-transform: uppercase; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 14px; }
+    figure { margin: 0; border: 1px solid var(--border); background: rgba(0,0,0,0.22); overflow: hidden; }
+    figure img { display: block; width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; background: #120e0b; }
+    figcaption { padding: 12px; font-size: 0.95rem; color: var(--muted); border-top: 1px solid var(--border); }
+    .status { color: #5a4a3a; font-size: 0.9rem; margin-top: 20px; font-style: italic; }
+    .footer { text-align: center; color: var(--muted); padding: 28px 8px 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="../../index.html" class="back">← Назад к касту</a>
+    <header class="hero">
+      <h1>ALYONKA THE PROPITUHA — Character Bible</h1>
+      <div class="subtitle">Tales from the Дед</div>
+    </header>
+
+    <section id="bio">
+      <h2>BIO / СУЩНОСТЬ</h2>
+      <p>Алёнка Горшкова, 43 года. Жена Коли-Гиббона. Бритая центральная полоса, бородавки по всему лицу, очень худая. Социальный паразит второго эшелона. Манипулирует через жалость, истерику и внезапные приступы «любви». Контраст: жаба без грима → куколка с гримом.</p>
+      <div class="meta-grid">
+        <div class="card"><h3>Catchwords</h3><ul><li>«Колян, ну-у-у...»</li><li>«Я же твоя жена, а!»</li><li>«Дай до получки»</li><li>«Это не я, это обстоятельства»</li></ul></div>
+        <div class="card"><h3>Архетип</h3><p>Социальный паразит / истеричка / манипулятор.</p></div>
+        <div class="card"><h3>Что никогда не делает</h3><p>Не работает, не моется, не готовит, не говорит правду.</p></div>
+        <div class="card"><h3>Аромат</h3><p>Дешёвый парфюм + пот + гниль из холодильника.</p></div>
+      </div>
+    </section>
+
+    <section id="refs">
+      <h2>REFERENCE SHEETS</h2>
+      <div class="gallery">
+        <figure><img src="reference-imgs/alenka-ref-01.png" alt="Alenka ref 1"><figcaption><strong>Reference 1</strong><br/>AI generation — portrait study</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-02.png" alt="Alenka ref 2"><figcaption><strong>Reference 2</strong><br/>AI generation — expression study</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-03.png" alt="Alenka ref 3"><figcaption><strong>Reference 3</strong><br/>AI generation — pose study</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-04.png" alt="Alenka ref 4"><figcaption><strong>Reference 4</strong><br/>AI generation — detail study</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-05.png" alt="Alenka ref 5"><figcaption><strong>Reference 5</strong><br/>AI generation — variant</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-06.png" alt="Alenka ref 6"><figcaption><strong>Reference 6</strong><br/>AI generation — variant</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-07.png" alt="Alenka ref 7"><figcaption><strong>Reference 7</strong><br/>AI generation — variant</figcaption></figure>
+        <figure><img src="reference-imgs/alenka-ref-08.png" alt="Alenka ref 8"><figcaption><strong>Reference 8</strong><br/>AI generation — variant</figcaption></figure>
+      </div>
+      <p class="status" style="margin-top:14px;">All images above are AI-generated reference studies. Final canonical sheets will replace these.</p>
+    </section>
+
+    <section id="rules">
+      <h2>CANON RULES</h2>
+      <div class="meta-grid">
+        <div class="card"><h3>Возраст</h3><p>43 ГОДА, не моложе.</p></div>
+        <div class="card"><h3>Волосы</h3><p>Бритая центральная полоса, клочки по бокам.</p></div>
+        <div class="card"><h3>Кожа</h3><p>Бородавки на щеках, подбородке, шее.</p></div>
+        <div class="card"><h3>Тело</h3><p>Худощавая, впалый живот, мелкие груди.</p></div>
+        <div class="card"><h3>Одежда</h3><p>Мятая майка в полоску, камуфляжные штаны, галоши.</p></div>
+        <div class="card"><h3>Поведение</h3><p>Истерична, манипулятивна, хитра.</p></div>
+      </div>
+    </section>
+
+    <div class="footer">Tales from the Дед • Brand-Book v0.5 • AI reference dump.</div>
+  </div>
+</body>
+</html>
