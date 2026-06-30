@@ -1,0 +1,6 @@
+title: "Tales from the Дед"
+description: "Ежемесячный хоррор-комикс-антология в стиле EC Comics × Junji Ito × славянская деревня"
+theme: jekyll-theme-minimal
+show_downloads: false
+markdown: kramdown
+permalink: /:title/
