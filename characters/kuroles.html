@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КУРОЛЕС — Tales from the Дед</title>
+<style>
+:root { --bg: #1a1410; --text: #d4c8a8; --accent: #8b0000; --border: #4a3424; --panel: #221913; --muted: #a99977; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0; background: radial-gradient(circle at top, rgba(139,0,0,0.08), transparent 35%), linear-gradient(180deg, #21170f 0%, var(--bg) 100%);
+  color: var(--text); font-family: "Courier New", Courier, monospace; line-height: 1.6;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 56px; }
+.hero {
+  border: 2px solid var(--border); background: linear-gradient(180deg, rgba(255,220,160,0.04), rgba(0,0,0,0.15)), var(--panel);
+  padding: 28px; box-shadow: 0 16px 40px rgba(0,0,0,0.45), inset 0 0 80px rgba(0,0,0,0.18);
+  position: relative; overflow: hidden; margin-bottom: 24px;
+}
+.hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); color: #eadfbf; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 2px 0 #000, 0 0 18px rgba(139,0,0,0.25); }
+.hero .subtitle { font-size: 1.1rem; color: #c8b690; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; }
+.back { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 8px 16px; }
+.back:hover { background: var(--accent); color: var(--bg); }
+section { margin-top: 24px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.12)); padding: 22px; box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
+h2 { font-size: 1.5rem; color: #f0e6c8; text-transform: uppercase; border-left: 6px solid var(--accent); padding-left: 12px; margin-bottom: 18px; }
+.portrait { float: right; width: 280px; max-width: 40%; margin: 0 0 16px 16px; border: 2px solid var(--border); }
+.portrait img { width: 100%; display: block; filter: contrast(1.05) sepia(0.15); }
+.meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.card { border: 1px solid var(--border); background: rgba(0,0,0,0.16); padding: 14px; }
+.card h3 { color: #efdfbd; margin-bottom: 8px; font-size: 1rem; text-transform: uppercase; }
+.status { color: #5a4a3a; font-size: 0.9rem; margin-top: 20px; font-style: italic; }
+@media (max-width: 700px) { .portrait { float: none; width: 100%; max-width: 100%; margin: 0 0 16px 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="../index.html" class="back">← Назад к касту</a>
+<div class="hero">
+  <h1>КУРОЛЕС</h1>
+  <div class="subtitle">Андрей, интеллигент</div>
+</div>
+<div class="portrait"><img src="../assets/characters/kuroles.png" alt="КУРОЛЕС"></div>
+<section>
+  <h2>БИО</h2>
+  <p>35 лет, теряет в карты. Считает, что умный — значит не жертва. Ошибается. Приехал в Покровку летом подработать, застрял на зиму. Читает книги, которые никому не нужны. Носит очки в латунной оправе, пиджак с заплатками, туфли с протёртыми носками. Думает, что может договориться с Дедом. Дед договаривается иначе.</p>
+</section>
+<section>
+  <h2>КАНОН</h2>
+  <div class="meta-grid">
+    <div class="card"><h3>Возраст</h3><p>35 лет</p></div>
+    <div class="card"><h3>Внешность</h3><p>Очки, латунная оправа, худощавый, нервные руки</p></div>
+    <div class="card"><h3>Одежда</h3><p>Пиджак с заплатками, туфли, растянутые носки</p></div>
+    <div class="card"><h3>Поведение</h3><p>Интеллигентный, самоуверенный, разговорчивый</p></div>
+    <div class="card"><h3>Слабость</h3><p>Уверен, что ум спасёт от всего</p></div>
+    <div class="card"><h3>Судьба</h3><p>Сезон 2 — «Жертвы»</p></div>
+  </div>
+</section>
+<section>
+  <h2>ЭПИЗОДЫ</h2>
+  <p>#1 «Работник Нестор». Летняя подработка в хозяйстве Деда. Михайловна подозревает неладное. Куролес — нет.</p>
+</section>
+<div class="status">Brand-book и reference sheets в разработке. Следующее обновление — скоро.</div>
+</div>
+</body>
+</html>
