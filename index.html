@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tales from the Дед — хоррор-антология</title>
     <meta name="description" content="Сказки от Деда — ежемесячный хоррор-комикс-антология в стиле EC Comics × Junji Ito.">
     <meta property="og:title" content="Tales from the Дед">
@@ -490,6 +490,41 @@
             transition: opacity 0.5s;
         }
         .blood-splatter.show { opacity: 0.6; }
+
+        /* ===== MOBILE MEDIA QUERIES ===== */
+        @media (max-width: 700px) {
+            .banner { aspect-ratio: 16/9; }
+            header { padding: 32px 16px 16px; }
+            h1 { font-size: clamp(1.8rem, 8vw, 3rem); }
+            .subtitle { font-size: clamp(1rem, 3vw, 1.4rem); }
+            .tagline { font-size: 0.95rem; padding: 0 8px; }
+            nav.tabs { gap: 4px; padding: 12px 8px; }
+            nav.tabs a { padding: 8px 12px; font-size: 0.8rem; }
+            main { padding: 32px 12px 48px; }
+            .char-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+            .char-card { padding: 12px; }
+            .episode { grid-template-columns: 60px 1fr; gap: 12px; padding: 12px; }
+            .episode .num { font-size: 2rem; }
+            .episode h3 { font-size: 1rem; }
+            .eye-tracker { width: 30px; height: 30px; }
+            .he-is-watching .watch-text { font-size: clamp(1.5rem, 10vw, 4rem); letter-spacing: 4px; }
+            .idle-jumpscare .jumpscare-face { width: 80vw; height: 50vh; }
+            .idle-jumpscare .jumpscare-msg { font-size: 1.1rem; bottom: 10%; }
+            .custom-context { min-width: 180px; }
+            .secret-link { width: 36px; height: 36px; }
+            footer { padding: 24px 12px; font-size: 0.75rem; }
+            footer .quote { font-size: 1.1rem; }
+        }
+        /* Touch devices: remove hover-only effects */
+        @media (pointer: coarse) {
+            .char-card:hover { transform: none; box-shadow: 0 4px 12px rgba(122,40,40,0.3); }
+            .glitch-img:hover { animation: none; }
+            .dialog-option:hover { background: rgba(40,30,20,0.5); color: var(--jaundice); }
+        }
+        /* iOS safe areas */
+        @supports (padding: max(0px)) {
+            body { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+        }
     </style>
 </head>
 <body>
@@ -776,6 +811,12 @@
         function initAudio() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            window.audioCtx = audioCtx; // expose for mobile-fixes.js
+
+            // iOS Safari fix: resume suspended context
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
 
             // Low drone
             droneOsc = audioCtx.createOscillator();
@@ -968,7 +1009,9 @@
         document.addEventListener("click", initAudio, { once: true });
         document.addEventListener("scroll", initAudio, { once: true });
         document.addEventListener("keydown", initAudio, { once: true });
+        document.addEventListener("touchstart", initAudio, { once: true });
     </script>
     <script src="personal.js"></script>
+    <script src="mobile-fixes.js"></script>
 </body>
 </html>
