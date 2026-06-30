@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Reader — Tales from the Дед</title>
+<style>
+:root { --bg: #0a0a0a; --text: #d4c8a8; --accent: #8b0000; --panel: #1a1410; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: "Courier New", monospace; }
+
+#reader { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.page { display: none; position: absolute; inset: 0; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.page.active { display: flex; }
+.page img { max-width: 90%; max-height: 70vh; object-fit: contain; border: 2px solid #3a2a1a; box-shadow: 0 0 40px rgba(139,0,0,0.2); }
+.page .caption { margin-top: 20px; font-size: 1.1rem; color: #8a7a5a; text-align: center; max-width: 600px; }
+.page .page-num { position: absolute; bottom: 20px; right: 30px; font-size: 0.85rem; color: #3a2a1a; }
+
+.nav { position: fixed; top: 0; left: 0; right: 0; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; background: linear-gradient(180deg, rgba(0,0,0,0.8), transparent); }
+.nav a { color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 6px 14px; font-size: 0.85rem; }
+.nav a:hover { background: var(--accent); color: var(--bg); }
+.nav .progress { flex: 1; margin: 0 20px; height: 3px; background: #2a1a0a; position: relative; }
+.nav .progress-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); transition: width 0.3s; }
+.nav .title { font-size: 0.85rem; color: #5a4a3a; }
+
+.click-zone { position: absolute; top: 0; bottom: 0; width: 30%; z-index: 50; cursor: pointer; }
+.click-zone.prev { left: 0; }
+.click-zone.next { right: 0; }
+.click-zone:hover { background: rgba(139,0,0,0.03); }
+
+.controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 100; }
+.controls button { background: transparent; border: 1px solid #3a2a1a; color: #8a7a5a; padding: 10px 18px; cursor: pointer; font-family: monospace; font-size: 0.9rem; }
+.controls button:hover { border-color: var(--accent); color: var(--accent); }
+
+@media (max-width: 600px) {
+  .page img { max-width: 95%; max-height: 60vh; }
+  .page .caption { font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="index.html">← Закрыть</a>
+  <div class="title" id="episode-title">TALES FROM THE ДЕД — Пилот</div>
+  <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+</div>
+
+<div id="reader">
+  <div class="click-zone prev" onclick="goPrev()"></div>
+  <div class="click-zone next" onclick="goNext()"></div>
+
+  <div class="page active" data-idx="0">
+    <img src="assets/cover/cover.png" alt="Обложка">
+    <div class="caption">Tales from the Дед — Сказки от Деда<br>Ежемесячная хоррор-антология</div>
+    <div class="page-num">1</div>
+  </div>
+  <div class="page" data-idx="1">
+    <img src="assets/banner/banner.png" alt="Титул">
+    <div class="caption">Деревня Покровка. Где-то между 1928 и 1991.<br>Гости приходят — и не уходят.</div>
+    <div class="page-num">2</div>
+  </div>
+  <div class="page" data-idx="2">
+    <img src="assets/characters/ded.png" alt="Дед">
+    <div class="caption"><strong>Дед</strong> — Хозяин браги. 70+, беззубый, в ушанке. Улыбается как хищник, который уже поел.</div>
+    <div class="page-num">3</div>
+  </div>
+  <div class="page" data-idx="3">
+    <img src="assets/characters/kolya.png" alt="Коля">
+    <div class="caption"><strong>Коля «Гиббон»</strong> — Bellov-патриарх. 40, бритая голова, тату GOLD CHAT. Грызёт как бродячий пёс.</div>
+    <div class="page-num">4</div>
+  </div>
+  <div class="page" data-idx="4">
+    <img src="assets/characters/alenka.png" alt="Алёнка">
+    <div class="caption"><strong>Алёнка «Пропитуха»</strong> — Gibbonikha. 43, бородавки, бритая полоса. Жаба без грима → куколка с гримом.</div>
+    <div class="page-num">5</div>
+  </div>
+  <div class="page" data-idx="5">
+    <img src="assets/characters/mila-vitek.png" alt="Мила и Витек">
+    <div class="caption"><strong>Мила + Витек</strong> — Адские помощники из СПб. Тату-пара. Подначивают гостей к хаосу.</div>
+    <div class="page-num">6</div>
+  </div>
+  <div class="page" data-idx="6">
+    <img src="assets/characters/kuroles.png" alt="Куролес">
+    <div class="caption"><strong>Куролес</strong> — Андрей, интеллигент. 35, теряет в карты. Считает, что умный — значит не жертва.</div>
+    <div class="page-num">7</div>
+  </div>
+  <div class="page" data-idx="7">
+    <img src="assets/characters/mikhaylovna.png" alt="Михайловна">
+    <div class="caption"><strong>Алла Михайловна</strong> — Бывшая красавица. 55, пьёт, стареет, торгуется с чёрными рекрутёрами.</div>
+    <div class="page-num">8</div>
+  </div>
+  <div class="page" data-idx="8">
+    <div style="text-align:center; max-width: 500px;">
+      <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 20px rgba(139,0,0,0.5);">КОНЕЦ ПИЛОТА</h1>
+      <p style="color: #6a5a3a; font-size: 1.1rem; line-height: 1.8;">Гость пришёл. Гость подумал, что он гость.<br>Гость ошибался.</p>
+      <p style="color: #3a2a1a; margin-top: 40px; font-size: 0.9rem;">Следующий выпуск — «Работник Нестор»</p>
+      <a href="index.html" style="display:inline-block; margin-top: 30px; color: var(--accent); border: 1px solid var(--accent); padding: 12px 24px; text-decoration: none;">← На главную</a>
+    </div>
+    <div class="page-num">9</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button onclick="goPrev()">← Назад</button>
+  <button onclick="goNext()">Вперёд →</button>
+</div>
+
+<script>
+  let current = 0;
+  const pages = document.querySelectorAll('.page');
+  const total = pages.length;
+  const bar = document.getElementById('progress-bar');
+  
+  function update() {
+    pages.forEach(p => p.classList.remove('active'));
+    pages[current].classList.add('active');
+    bar.style.width = ((current + 1) / total * 100) + '%';
+  }
+  function goNext() { if (current < total - 1) { current++; update(); } }
+  function goPrev() { if (current > 0) { current--; update(); } }
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') goNext();
+    if (e.key === 'ArrowLeft') goPrev();
+  });
+  
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) { diff > 0 ? goNext() : goPrev(); }
+  });
+  
+  update();
+</script>
+</body>
+</html>
