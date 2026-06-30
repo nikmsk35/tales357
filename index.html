@@ -329,12 +329,199 @@
         /* Invert flash */
         .invert-flash { animation: invertFlash 0.1s; }
         @keyframes invertFlash { 0%, 100% { filter: invert(0); } 50% { filter: invert(1); } }
+
+        /* ===== EYE TRACKER ===== */
+        .eye-tracker {
+            position: fixed;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff0000 10%, #8b0000 40%, #1a0000 70%);
+            box-shadow: 0 0 15px rgba(139,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 9990;
+            opacity: 0;
+            transition: opacity 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        .eye-tracker.active { opacity: 0.7; }
+        .eye-tracker::after {
+            content: "";
+            position: absolute;
+            top: 35%; left: 35%;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #000;
+            box-shadow: 0 0 4px #ff0000;
+        }
+
+        /* ===== HE IS WATCHING OVERLAY ===== */
+        .he-is-watching {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 9994;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+        .he-is-watching.show {
+            opacity: 1;
+            animation: watchFade 2.5s forwards;
+        }
+        @keyframes watchFade {
+            0% { opacity: 0; transform: scale(0.8); }
+            20% { opacity: 1; transform: scale(1.1); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); }
+        }
+        .he-is-watching .watch-text {
+            font-family: "Special Elite", monospace;
+            font-size: clamp(2rem, 8vw, 6rem);
+            color: #7a2828;
+            text-shadow: 0 0 30px rgba(122,40,40,0.8), 0 0 60px rgba(122,40,40,0.4);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* ===== CARD SHAKE ===== */
+        .shake-card {
+            animation: cardShake 0.4s ease-in-out;
+        }
+        @keyframes cardShake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-4px, 2px) rotate(-1deg); }
+            40% { transform: translate(4px, -2px) rotate(1deg); }
+            60% { transform: translate(-3px, 3px) rotate(-0.5deg); }
+            80% { transform: translate(3px, -3px) rotate(0.5deg); }
+        }
+
+        /* ===== TEXT SCRAMBLE ===== */
+        .scramble-text {
+            font-family: "Special Elite", monospace;
+            display: inline-block;
+            min-width: 1em;
+        }
+
+        /* ===== IDLE JUMPSCARE ===== */
+        .idle-jumpscare {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.05s;
+        }
+        .idle-jumpscare.show {
+            opacity: 1;
+            pointer-events: all;
+            animation: jumpscareFlash 0.3s steps(1) infinite;
+        }
+        @keyframes jumpscareFlash {
+            0%, 100% { background: #000; }
+            50% { background: #1a0000; }
+        }
+        .idle-jumpscare .jumpscare-face {
+            width: 60vw; height: 60vh;
+            max-width: 500px; max-height: 500px;
+            background: url('assets/characters/ded.png') center/contain no-repeat;
+            filter: contrast(2) brightness(0.5) sepia(0.5) saturate(2);
+            animation: jumpscareScale 0.5s ease-out forwards;
+        }
+        @keyframes jumpscareScale {
+            0% { transform: scale(0.1); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .idle-jumpscare .jumpscare-msg {
+            position: absolute;
+            bottom: 15%;
+            font-family: "Special Elite", monospace;
+            font-size: 1.5rem;
+            color: #7a2828;
+            text-shadow: 0 0 10px rgba(122,40,40,0.8);
+            animation: jumpscareMsg 0.3s ease-in-out infinite alternate;
+        }
+        @keyframes jumpscareMsg {
+            from { opacity: 0.5; transform: translateX(-5px); }
+            to { opacity: 1; transform: translateX(5px); }
+        }
+
+        /* ===== CUSTOM CONTEXT MENU ===== */
+        .custom-context {
+            position: fixed;
+            z-index: 10002;
+            background: #1a1410;
+            border: 2px solid #4a3424;
+            box-shadow: 0 0 20px rgba(122,40,40,0.3);
+            padding: 8px 0;
+            min-width: 200px;
+            display: none;
+            font-family: "Courier New", monospace;
+        }
+        .custom-context.show { display: block; }
+        .custom-context-item {
+            padding: 8px 16px;
+            color: #8a7a5a;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .custom-context-item:hover {
+            background: rgba(122,40,40,0.2);
+            color: #d4c8a8;
+        }
+        .custom-context-separator {
+            border-top: 1px solid #3a2a1a;
+            margin: 4px 0;
+        }
+
+        /* ===== RANDOM BLOOD SPLOTCH ===== */
+        .blood-splatter {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9993;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .blood-splatter.show { opacity: 0.6; }
     </style>
 </head>
 <body>
     <div class="vignette"></div>
     <div class="flicker-layer"></div>
     <div class="scan-flash"></div>
+
+    <!-- Eye tracker -->
+    <div class="eye-tracker" id="eye"></div>
+
+    <!-- He is watching overlay -->
+    <div class="he-is-watching" id="watchOverlay">
+        <div class="watch-text">ОН СМОТРИТ</div>
+    </div>
+
+    <!-- Idle jumpscare -->
+    <div class="idle-jumpscare" id="jumpscare">
+        <div class="jumpscare-face"></div>
+        <div class="jumpscare-msg">ТЫ УСНУЛ. ДЕД НЕ СПИТ.</div>
+    </div>
+
+    <!-- Custom context menu -->
+    <div class="custom-context" id="ctxMenu">
+        <div class="custom-context-item">📋 Дед скопировал твой выбор</div>
+        <div class="custom-context-separator"></div>
+        <div class="custom-context-item">🔍 Исследовать погреб</div>
+        <div class="custom-context-item">🩸 Проверить брагу</div>
+        <div class="custom-context-separator"></div>
+        <div class="custom-context-item">👁️ Дед наблюдает</div>
+    </div>
+
+    <!-- Blood splatter container -->
+    <div id="bloodContainer"></div>
 
     <!-- Hidden whispers -->
     <div class="whisper" style="top: 12%; left: 5%;">он смотрит</div>
@@ -463,6 +650,38 @@
             <div class="codex"><strong>Чёрные рекрутёры.</strong> Не служат Деду напрямую. Но после их визитов в дом приходят адские помощники.</div>
             <div class="codex"><strong>Вечная память.</strong> В каждом выпуске кто-то получает траурный портрет с подписью «Покойник № N».</div>
         </section>
+
+        <!-- 
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  ПАСХАЛКА #1: Если ты читаешь это — значит ты           ║
+            ║  заглянул в исходный код. Дед одобряет.                 ║
+            ║  Попробуй Konami Code: ↑↑↓↓←→←→BA                     ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <!-- 
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  ПАСХАЛКА #2: В консоли есть ещё 7 скрытых сообщений.  ║
+            ║  Но самое страшное — то, что ты сейчас читаешь.          ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <!-- 
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  ПАСХАЛКА #3: Погреб глубже, чем ты думаешь.            ║
+            ║  Ссылка в правом нижнем углу ведёт туда.                  ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <!-- 
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  ПАСХАЛКА #4: Если долго сидеть на странице ничего       ║
+            ║  не делая — Дед сам придёт.                              ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
+        <!-- 
+            ╔═══════════════════════════════════════════════════════════╗
+            ║  ПАСХАЛКА #5: Попробуй кликнуть правой кнопкой мыши.   ║
+            ║  Меню изменилось.                                       ║
+            ╚═══════════════════════════════════════════════════════════╝
+        -->
     </main>
 
     <footer>
@@ -635,6 +854,114 @@
                 }
             }, 15000);
         }
+
+        /* ===== KONAMI CODE ===== */
+        const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        let konamiIdx = 0;
+        document.addEventListener("keydown", e => {
+            if (e.keyCode === konami[konamiIdx]) {
+                konamiIdx++;
+                if (konamiIdx === konami.length) {
+                    window.location.href = "dossier.html";
+                    konamiIdx = 0;
+                }
+            } else {
+                konamiIdx = 0;
+            }
+        });
+
+        /* ===== EYE TRACKER ===== */
+        const eye = document.getElementById("eye");
+        document.addEventListener("mousemove", e => {
+            eye.style.left = e.clientX + "px";
+            eye.style.top = e.clientY + "px";
+            eye.classList.add("active");
+            clearTimeout(eye._timeout);
+            eye._timeout = setTimeout(() => eye.classList.remove("active"), 2000);
+        });
+
+        /* ===== HE IS WATCHING OVERLAY ===== */
+        const watchOverlay = document.getElementById("watchOverlay");
+        setInterval(() => {
+            if (Math.random() < 0.04) {
+                watchOverlay.classList.add("show");
+                setTimeout(() => watchOverlay.classList.remove("show"), 2500);
+            }
+        }, 15000);
+
+        /* ===== CARD SHAKE ON CLICK ===== */
+        document.querySelectorAll(".char-card").forEach(card => {
+            card.addEventListener("click", function() {
+                this.classList.add("shake-card");
+                setTimeout(() => this.classList.remove("shake-card"), 400);
+            });
+        });
+
+        /* ===== TEXT SCRAMBLE ON HOVER ===== */
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        document.querySelectorAll(".char-card h3").forEach(el => {
+            const original = el.textContent;
+            el.addEventListener("mouseenter", function() {
+                let iterations = 0;
+                const interval = setInterval(() => {
+                    this.textContent = original.split("").map((letter, index) => {
+                        if (index < iterations) return original[index];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    }).join("");
+                    if (iterations >= original.length) clearInterval(interval);
+                    iterations += 1/2;
+                }, 30);
+            });
+            el.addEventListener("mouseleave", function() {
+                this.textContent = original;
+            });
+        });
+
+        /* ===== IDLE JUMPSCARE ===== */
+        let idleTimer;
+        const jumpscare = document.getElementById("jumpscare");
+        function resetIdle() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                jumpscare.classList.add("show");
+                setTimeout(() => jumpscare.classList.remove("show"), 4000);
+            }, 90000);
+        }
+        ["mousemove", "keydown", "click", "scroll"].forEach(evt => {
+            document.addEventListener(evt, resetIdle);
+        });
+        resetIdle();
+
+        /* ===== CUSTOM CONTEXT MENU ===== */
+        const ctxMenu = document.getElementById("ctxMenu");
+        document.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            ctxMenu.style.left = e.clientX + "px";
+            ctxMenu.style.top = e.clientY + "px";
+            ctxMenu.classList.add("show");
+        });
+        document.addEventListener("click", () => ctxMenu.classList.remove("show"));
+
+        /* ===== RANDOM BLOOD SPLOTCH ===== */
+        function bloodSplatter() {
+            const s = document.createElement("div");
+            s.className = "blood-splatter";
+            const size = 50 + Math.random() * 150;
+            s.style.width = size + "px";
+            s.style.height = size + "px";
+            s.style.left = Math.random() * 90 + "vw";
+            s.style.top = Math.random() * 90 + "vh";
+            s.style.background = "radial-gradient(circle, rgba(122,40,40,0.7) 0%, transparent 70%)";
+            s.style.borderRadius = "50%";
+            s.style.filter = "blur(8px)";
+            document.body.appendChild(s);
+            setTimeout(() => s.classList.add("show"), 100);
+            setTimeout(() => s.classList.remove("show"), 5000);
+            setTimeout(() => s.remove(), 6000);
+        }
+        setInterval(() => {
+            if (Math.random() < 0.1) bloodSplatter();
+        }, 20000);
 
         // Unlock audio on first interaction
         document.addEventListener("click", initAudio, { once: true });
