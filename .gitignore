@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+github_token.txt
+*.env
+*.key
+
+# IDE
+.vscode/
+.idea/
