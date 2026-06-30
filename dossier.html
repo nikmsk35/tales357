@@ -174,9 +174,54 @@
             .then(data => { document.getElementById("ip").textContent = data.ip; })
             .catch(() => { document.getElementById("ip").textContent = "скрыт (но Дед знает)"; });
 
+        // Personal data from dialog
+        const dedName = localStorage.getItem("ded_name");
+        const dedCity = localStorage.getItem("ded_city");
+        const dedPurpose = localStorage.getItem("ded_purpose");
+        const dedFirstVisit = localStorage.getItem("ded_first_visit");
+        const dedLastVisit = localStorage.getItem("ded_last_visit");
+        const fearLevel = localStorage.getItem("ded_fear_level") || "0";
+
+        if (dedName) {
+            const container = document.querySelector(".container");
+            const personalBlock = document.createElement("div");
+            personalBlock.style.marginTop = "20px";
+            personalBlock.style.borderTop = "1px dashed #2a1a0a";
+            personalBlock.style.paddingTop = "20px";
+            personalBlock.innerHTML = `
+                <div class="data-row"><span class="label">Имя:</span><span class="value">${dedName}</span></div>
+                <div class="data-row"><span class="label">Откуда:</span><span class="value">${dedCity || "неизвестно"}</span></div>
+                <div class="data-row"><span class="label">Цель визита:</span><span class="value">${dedPurpose || "неизвестна"}</span></div>
+                <div class="data-row"><span class="label">Уровень угрозы:</span><span class="value" style="color:#7a2828;">${fearLevel}/5</span></div>
+                <div class="data-row"><span class="label">Первый визит:</span><span class="value">${dedFirstVisit ? new Date(dedFirstVisit).toLocaleString("ru-RU") : "неизвестен"}</span></div>
+                <div class="data-row"><span class="label">Последний визит:</span><span class="value">${dedLastVisit ? new Date(dedLastVisit).toLocaleString("ru-RU") : "неизвестен"}</span></div>
+            `;
+            container.appendChild(personalBlock);
+
+            // Add personalized threat message
+            const threatMsg = document.createElement("div");
+            threatMsg.style.marginTop = "30px";
+            threatMsg.style.color = "#7a2828";
+            threatMsg.style.fontFamily = "Special Elite, monospace";
+            threatMsg.style.fontSize = "1.1rem";
+            threatMsg.style.textShadow = "0 0 10px rgba(122,40,40,0.3)";
+            const threats = [
+                `${dedName}, Дед наблюдает.`,
+                `${dedName} из ${dedCity || "неизвестно"} — в досье.`,
+                `Ты приходил за «${dedPurpose || "неизвестно»}». Дед помнит.`,
+                `Уровень угрозы ${fearLevel}/5. Скоро будет 5.`,
+                `Брага готовится, ${dedName}.`
+            ];
+            threatMsg.textContent = threats[Math.min(parseInt(fearLevel), threats.length - 1)];
+            container.appendChild(threatMsg);
+        }
+
         // Console message
         console.log("%cДОСЬЕ", "color: #7a2828; font-size: 24px; font-family: monospace;");
         console.log("%cТы сам пришёл сюда. Не мы тебя звали. Не мы тебя звали.", "color: #5c4a3a; font-family: monospace;");
+        if (dedName) {
+            console.log(`%c${dedName}, Дед знает всё.`, "color: #7a2828; font-size: 14px; font-family: monospace;");
+        }
     </script>
 </body>
 </html>
