@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Карта деревни Покровка v2 · Tales from the Дед</title>
+<style>
+/* ============================================================
+   MAP.CSS · Tales from the Дед · base styles
+   Dark horror Russian village map with isometric pixel sprites.
+   v2 — sprite-based interactive map (experimental)
+   ============================================================ */
+:root{
+  --bg-night:#0a0a0a;
+  --bg-floor:#1f2c1a;
+  --wood-dark:#4a3621;
+  --wood-old:#6a5340;
+  --blood-red:#c0392b;
+  --warm-yellow:#f4c542;
+  --moss:#1a332a;
+  --frost:#5a6960;
+  --sepia-cream:#d8c8a8;
+  --text-cream:#e8d5b7;
+  --text-active:#fff;
+  --shadow-ink:rgba(0,0,0,.85);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html,body{
+  height:100%;
+  background:var(--bg-night);
+  color:var(--text-cream);
+  font-family:Georgia,serif;
+  overflow:hidden;
+}
+
+/* === BACK BUTTON ============================================ */
+.back-btn{
+  position:absolute;
+  top:2vh;
+  left:2vh;
+  z-index:60;
+  color:var(--text-cream);
+  text-decoration:none;
+  font-family:'Courier New',monospace;
+  font-size:12px;
+  border:1px solid var(--frost);
+  padding:8px 14px;
+  background:rgba(10,10,10,.7);
+  transition:.2s;
+}
+.back-btn:hover{ background:var(--blood-red); border-color:var(--blood-red); }
+
+/* === MAP CANVAS ============================================= */
+#map-canvas{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  background:var(--bg-night);
+  overflow:hidden;
+}
+
+/* === LAYER 0 — BASE GROUND =================================== */
+.layer-bg{
+  position:absolute;
+  inset:0;
+  background-image:url('map2/map-bg-16x9.png');
+  background-size:cover;
+  background-position:center;
+  filter:brightness(.85) saturate(.85);
+  z-index:0;
+}
+
+/* === LAYER 5 — DECORATIVE TREES ============================== */
+.tree{
+  position:absolute;
+  filter:brightness(.6);
+  opacity:.85;
+  z-index:5;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+
+/* === LAYER 10 — BUILDINGS ==================================== */
+.building{
+  position:absolute;
+  z-index:10;
+  transform:translate(-50%,-50%);
+  cursor:pointer;
+  transition:transform .3s ease,filter .3s ease;
+  pointer-events:none;        /* clicks go through to .hotspot */
+}
+.building.is-active{
+  transform:translate(-50%,-50%) scale(1.18);
+  filter:brightness(1.45) drop-shadow(0 0 18px var(--warm-yellow));
+  z-index:12;
+}
+.building-shadow{
+  position:absolute;
+  inset:-15% -15% -15% -15%;
+  pointer-events:none;
+  border-radius:50%;
+  z-index:-1;
+}
+
+/* light sources (window glow effect via radial gradient) */
+.building-shadow::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+/* warm yellow light (Ded, Podval) */
+.light-warm{ box-shadow:0 0 60px 30px rgba(244,197,66,.42); }
+.light-warm-strong{ box-shadow:0 0 80px 40px rgba(244,197,66,.55); }
+/* red light (Kolya, Alyonka, Banya, Mila) */
+.light-red{ box-shadow:0 0 50px 25px rgba(192,57,43,.45); }
+.light-blood{ box-shadow:0 0 65px 30px rgba(192,57,43,.55); }
+/* dim grey light (Mila — one window dim) */
+.light-grey{ box-shadow:0 0 40px 20px rgba(150,150,150,.20); }
+
+/* === LAYER 11 — WELL (z ABOVE others at center) ============== */
+.well{
+  position:absolute;
+  z-index:11;
+  transform:translate(-50%,-50%);
+}
+
+/* === LAYER 25 — LABELS ======================================= */
+.label{
+  position:absolute;
+  z-index:25;
+  font-family:'Courier New',monospace;
+  font-size:12px;
+  font-weight:bold;
+  color:var(--warm-yellow);
+  text-shadow:0 1px 4px #000,0 0 12px #000;
+  text-align:center;
+  pointer-events:none;
+  transform:translate(-50%,0);
+  letter-spacing:.5px;
+  white-space:nowrap;
+  transition:color .3s ease;
+}
+.label.is-active{ color:#fff; }
+.label-small{ font-size:10px; opacity:.8; }
+
+/* === LAYER 30 — HOTSPOTS (interactive buttons) ============== */
+.hotspot{
+  position:absolute;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  z-index:30;
+  transform:translate(-50%,-50%);
+  outline:0;
+}
+.hotspot:hover, .hotspot:focus{
+  background:rgba(244,197,66,.06);
+  box-shadow:0 0 0 2px rgba(244,197,66,.15);
+}
+
+/* === LAYER 40 — INFO PANEL (bottom) ========================== */
+#info-panel{
+  position:absolute;
+  bottom:4vh;
+  left:50%;
+  transform:translateX(-50%);
+  max-width:720px;
+  width:90%;
+  background:rgba(10,10,10,.88);
+  padding:16px 24px;
+  border-radius:2px;
+  border-left:2px solid var(--blood-red);
+  font-style:italic;
+  text-align:center;
+  z-index:40;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+#info-panel .title{
+  font-style:normal;
+  font-weight:bold;
+  color:var(--warm-yellow);
+  margin-bottom:6px;
+  letter-spacing:1px;
+  font-size:14px;
+}
+#info-panel .body{ font-size:14px; line-height:1.5; }
+
+/* === LAYER 50 — TOP TITLE BANNER ============================= */
+#top-banner{
+  position:absolute;
+  top:2vh;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:rgba(232,213,183,.55);
+  text-transform:uppercase;
+  z-index:50;
+  pointer-events:none;
+  text-align:center;
+}
+
+/* === ANIMATIONS (subtle, atmospheric) ======================== */
+@keyframes flicker{
+  0%,100%{ opacity:1; }
+  50%{ opacity:.85; }
+}
+@keyframes flicker-red{
+  0%,100%{ opacity:1; }
+  33%{ opacity:.75; }
+  66%{ opacity:.95; }
+}
+.flicker{ animation:flicker 3.5s infinite ease-in-out; }
+.flicker-red{ animation:flicker-red 2.7s infinite ease-in-out; }
+
+/* steam wisps from bath == */
+@keyframes steam{
+  0%{ opacity:.3; transform:translateY(0); }
+  100%{ opacity:0; transform:translateY(-12px); }
+}
+
+/* music note (Alyonka window == */
+@keyframes note-float{
+  0%{ transform:translateY(0); opacity:.7; }
+  100%{ transform:translateY(-10px); opacity:0; }
+}
+
+/* mobile responsive fallback */
+@media (max-width:768px){
+  .label{ font-size:10px; }
+  #info-panel{ font-size:13px; padding:12px 18px; }
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="map-canvas">
+
+  <!-- LAYER 0 — base ground -->
+  <div class="layer-bg" aria-hidden="true"></div>
+
+  <!-- BACK BUTTON -->
+  <a href="index.html" class="back-btn">← Назад</a>
+
+  <!-- LAYER 50 — top banner -->
+  <div id="top-banner">TALES FROM THE ДЕД · Карта v2 · 1930–1991, застывшая в советской паузе</div>
+
+  <!-- LAYER 5 — decorative trees (background forest) -->
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:2%;  left:8%;  width:130px; object-fit:none; object-position:0 0;"        alt="">
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:4%;  left:88%; width:145px; object-fit:none; object-position:33% 0;"      alt="">
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:88%; left:8%;  width:120px; object-fit:none; object-position:0 100%;"     alt="">
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:90%; left:92%; width:160px; object-fit:none; object-position:33% 0;"      alt="">
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:50%; left:4%;  width:100px; object-fit:none; object-position:66% 0;"      alt="">
+  <img class="tree" src="map2/sprite-trees-4variants.png" style="top:50%; left:96%; width:110px; object-fit:none; object-position:100% 0;"     alt="">
+
+  <!-- LAYER 11 — WELL (dead center of crossroads) -->
+  <div class="building well light-grey" data-id="kolodets"
+       style="top:50%; left:50%; width:110px;">
+    <img src="map2/sprite-kolodets.png" style="width:100%;display:block;" alt="Колодец">
+  </div>
+  <div class="hotspot" style="top:50%; left:50%;" data-id="kolodets" aria-label="Колодец"></div>
+  <div class="label" style="top:calc(50% - 70px); left:50%;">КОЛОДЕЦ</div>
+
+  <!-- LAYER 10 — IZBA DEDA (top-center, dominant) -->
+  <div class="building light-warm-strong flicker" data-id="ded"
+       style="top:6%; left:50%; width:160px;">
+    <img src="map2/sprite-izba-deda.png" style="width:100%;display:block;" alt="Изба Деда">
+  </div>
+  <div class="hotspot" style="top:6%; left:50%;" data-id="ded" aria-label="Изба Деда"></div>
+  <div class="label" style="top:calc(6% - 90px); left:50%;">ИЗБА ДЕДА</div>
+
+  <!-- PODVAL (just under Ded) -->
+  <div class="building light-warm" data-id="podval"
+       style="top:22%; left:56%; width:110px;">
+    <img src="map2/sprite-podval.png" style="width:100%;display:block;" alt="Погреб">
+  </div>
+  <div class="hotspot" style="top:22%; left:56%;" data-id="podval" aria-label="Погреб"></div>
+  <div class="label" style="top:calc(22% - 70px); left:56%;">ПОГРЕБ</div>
+
+  <!-- DOM KOLI (left, mid) -->
+  <div class="building light-red flicker-red" data-id="kolya"
+       style="top:32%; left:22%; width:140px;">
+    <img src="map2/sprite-dom-koli.png" style="width:100%;display:block;" alt="Дом Коли">
+  </div>
+  <div class="hotspot" style="top:32%; left:22%;" data-id="kolya" aria-label="Дом Коли"></div>
+  <div class="label" style="top:calc(32% - 80px); left:22%;">ДОМ КОЛИ</div>
+
+  <!-- DOM ALENKI (right, mid, mirrored to Kolya) -->
+  <div class="building light-red flicker" data-id="alenka"
+       style="top:32%; left:78%; width:140px;">
+    <img src="map2/sprite-dom-alenki.png" style="width:100%;display:block;" alt="Дом Алёнки">
+  </div>
+  <div class="hotspot" style="top:32%; left:78%;" data-id="alenka" aria-label="Дом Алёнки"></div>
+  <div class="label" style="top:calc(32% - 80px); left:78%;">ДОМ АЛЁНКИ</div>
+
+  <!-- DOM MILA + VITEK (bottom-left) -->
+  <div class="building light-grey" data-id="mila"
+       style="top:65%; left:18%; width:150px;">
+    <img src="map2/sprite-dom-mila-vitek.png" style="width:100%;display:block;" alt="Дом Милы и Витек">
+  </div>
+  <div class="hotspot" style="top:65%; left:18%;" data-id="mila" aria-label="Дом Милы и Витек"></div>
+  <div class="label" style="top:calc(65% - 90px); left:18%;">МИЛА И ВИТЕК</div>
+
+  <!-- BANYA (bottom-right, mirrored to Mila) -->
+  <div class="building light-red flicker" data-id="banya"
+       style="top:72%; left:80%; width:130px;">
+    <img src="map2/sprite-banya.png" style="width:100%;display:block;" alt="Баня">
+  </div>
+  <div class="hotspot" style="top:72%; left:80%;" data-id="banya" aria-label="Баня"></div>
+  <div class="label" style="top:calc(72% - 80px); left:80%;">БАНЯ</div>
+
+  <!-- LAYER 40 — info panel at bottom -->
+  <div id="info-panel">
+    <div class="title" id="info-title">ДЕРЕВНЯ ПОКРОВКА</div>
+    <div class="body" id="info-body">Наведи курсор на дом. Послушай, что внутри. Не задерживайся у колодца слишком долго.</div>
+  </div>
+
+</div>
+
+<script>
+/* ===============================================================
+   MAP.JS · Tales from the Дед · interactivity
+   On hotspot hover/focus: highlight sprite, swap info panel.
+   =============================================================== */
+(function(){
+  'use strict';
+
+  /* Lore strings — one per landmark */
+  var LORE = {
+    default: {
+      title: 'ДЕРЕВНЯ ПОКРОВКА',
+      body:  'Наведи курсор на дом. Послушай, что внутри. Не задерживайся у колодца слишком долго.'
+    },
+    ded: {
+      title: 'ИЗБА ДЕДА',
+      body:  'Свет горит. Кто-то не спит. Кто-то ждёт. Брага стоит на плите, и каждый новый гость делает её крепче.'
+    },
+    podval: {
+      title: 'ПОГРЕБ',
+      body:  'Заперто. Нужен ключ. Под банками с соленьями лежат вещи пропавших — так говорит Дед. Проверять не хочется.'
+    },
+    kolya: {
+      title: 'ДОМ КОЛИ',
+      body:  'Кто-то двигается внутри... ♪ Коля «Гиббон» снова грызёт семечки. Жена ушла к Маме. Дочь не звонит.'
+    },
+    alenka: {
+      title: 'ДОМ АЛЁНКИ · КОМ. 47',
+      body:  'Музыка тихо играет. Кто-то слушает. Алёнка делает грим перед сменой — три с половиной часа до рассвета.'
+    },
+    mila: {
+      title: 'МИЛА И ВИТЕК',
+      body:  'Один свет тусклый. Другой погас. Так у них всегда: один работает, другой ждёт. Ждут они гостей.'
+    },
+    banya: {
+      title: 'БАНЯ',
+      body:  'Пар горячий. Как и слёзы. Пар идёт из трубы — но никто сегодня не парится. Дверь скрипит сама.'
+    },
+    kolodets: {
+      title: 'КОЛОДЕЦ',
+      body:  'Брось монетку. Узнай, что скажет Дед. Цепи ржавые. Ведро упало вчера — никто не достал. Говорят, на дне что-то стучит.'
+    }
+  };
+
+  var buildings = document.querySelectorAll('.building');
+  var labels    = document.querySelectorAll('.label');
+  var hotspots  = document.querySelectorAll('.hotspot');
+  var titleEl   = document.getElementById('info-title');
+  var bodyEl    = document.getElementById('info-body');
+
+  function setActive(id){
+    // restore default if no id
+    if(!id){ id = 'default'; }
+
+    // update info panel
+    var lore = LORE[id] || LORE.default;
+    titleEl.textContent = lore.title;
+    bodyEl.textContent  = lore.body;
+
+    // toggle building highlights
+    buildings.forEach(function(b){
+      if(b.dataset.id === id){ b.classList.add('is-active'); }
+      else { b.classList.remove('is-active'); }
+    });
+    labels.forEach(function(l){
+      if(l.dataset && l.dataset.id === id){ l.classList.add('is-active'); }
+      else { l.classList.remove('is-active'); }
+    });
+  }
+
+  function clearActive(){
+    setActive('default');
+  }
+
+  // wire events on each hotspot
+  hotspots.forEach(function(hs){
+    var id = hs.dataset.id;
+    hs.addEventListener('mouseenter', function(){ setActive(id); });
+    hs.addEventListener('focus',      function(){ setActive(id); });
+    hs.addEventListener('mouseleave',  clearActive);
+    hs.addEventListener('blur',       clearActive);
+
+    // mobile tap-toggle
+    hs.addEventListener('click', function(e){
+      e.preventDefault();
+      var wasActive = !hs.classList.contains('mobile-on');
+      hotspots.forEach(function(h){ h.classList.remove('mobile-on'); });
+      if(wasActive){ hs.classList.add('mobile-on'); setActive(id); }
+      else { clearActive(); }
+    });
+  });
+
+  // initialize
+  clearActive();
+})();
+</script>
+
+</body>
+</html>
