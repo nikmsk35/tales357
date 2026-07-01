@@ -1,0 +1,82 @@
+=== STYLE ANCHOR · TALES FROM THE ДЕД · ИКОНКИ v1 ===
+
+Скопируй блок ниже и ПОСТАВЬ В НАЧАЛО любого промпта, когда нужна новая
+иконка в едином стиле с пакетом ico-01..ico-14. Не меняй формулировки,
+меняй только описание субъекта в фигурных скобках.
+
+────────────────────────────────────────────────────────────
+[STYLE-ANCHOR PREFIX — копируй отсюда:]
+
+Single isolated ICON for a horror comic project "Tales from the Дед".
+Square 1:1 aspect ratio. TRANSPARENT background outside the icon.
+ONLY thin black line work, ~2.5px stroke weight, pure ink color #1a1410.
+Hand-drawn imperfect woodcut / etching style — every line slightly wobbly,
+corners sharp and ink-like, NO fills, NO shadows, NO gradients, NO 3D
+effects, NO cartoon smoothing. Cyrillic hand-lettered micro-label
+underneath the icon (≤ 14 characters). The icon must feel like it was
+clipped out of an old Soviet broadside or an EC Comics-style vintage
+pulp illustration. NO halo, NO background circle, NO frame around icon.
+Single subject, centered, with at least 8% margin on all sides. Avoid
+fine detail under 8px — must remain legible at 16x16 px. The line
+quality must look like ballpoint pen or scratch-board, not like raster
+or vector-perfect.
+
+[КОНЕЦ ПРЕФИКСА — после него пиши субъект:]
+
+SUBJECT: {опиши что рисовать одним-двумя предложениями по-русски
+или по-английски}
+
+────────────────────────────────────────────────────────────
+
+ПРАВИЛА ПРИМЕНЕНИЯ:
+
+1. ПРЕФИКС ОБЯЗАТЕЛЕН. Без него стиль «плывёт».
+2. Если ИИ поддерживает image-to-image — ДОПОЛНИТЕЛЬНО прикрепи
+   любую из иконок ico-01..ico-14 как референс (image_url). Это
+   даст 100% попадание в стиль.
+3. Длина SUBJECT — не больше 2 предложений. Больше — ИИ начнёт
+   рисовать сцену, а не иконку.
+4. Микро-подпись кириллицей под иконкой обязательна — она 30%
+   отвечает за узнаваемость серии.
+5. Если результат НЕ в стиле — добавь в SUBJECT фразу
+   «matching the woodcut/etching style of the reference»
+   и приложи референс-картинку.
+
+────────────────────────────────────────────────────────────
+
+ПРИМЕР 1 — иконка несуществующего субъекта:
+[SUBJECT]: Бабка с кошёлкой, идущая по деревенской улице, в одной
+руке клюка, в другой — узелок. На кошёлке нашивка «Покровка».
+
+ПРИМЕР 2 — иконка предмета:
+[SUBJECT]: Старый советский магнитофон «Маяк» с размотанной плёнкой.
+
+ПРИМЕР 3 — иконка символа:
+[SUBJECT]: Перевёрнутый православный крест с одной сломанной перекладиной.
+
+ПРИМЕР 4 — иконка еды:
+[SUBJECT]: Миска пустой каши с одной ложкой, прилипшей ко дну.
+
+────────────────────────────────────────────────────────────
+
+ГДЕ ЛЕЖАТ ФАЙЛЫ-ПОДСКАЗКИ:
+
+• /brand-book/tales357/icons/                  — 14 готовых PNG иконок
+• /brand-book/tales357/icons/references/
+    master-reference-7x2.png                  — сетка 7×2 + style DNA
+    master-reference-prefiksy.png             — спецификации + шаблон промпта
+    style-comparison-panel.png                — доказательство работы якоря
+    sample-icon-shovel.png                    — образец новой иконки (лопата)
+
+В ПРОДЕ на GitHub Pages: /tales357/icons/ те же 14 PNG +
+опционально /tales357/icons/references/ (если хочешь скачиваемые
+мастер-референсы для соавторов).
+
+💡 Короткое правило на будущее
+
+    Любой новый субъект → префикс из STYLE_ANCHOR.txt + опционально
+    референс-картинка из 14 готовых → готово.
+
+Пакет полностью portable: можешь копировать в другой проект, передавать
+соавтору, использовать при работе с любым ИИ (Midjourney, DALL·E, Stable
+Diffusion, Nano Banana, FLUX) — формулировка универсальная.
