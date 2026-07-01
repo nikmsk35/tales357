@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Часовня Покровки — Tales from the Дед</title>
+    <meta name="description" content="Заброшенная церковь в деревне Покровка. Здесь молятся не святым. Здесь молятся Деду.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@500&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap">
+    <style>
+        :root {
+            --olive: #3d4a2e;
+            --sepia: #5c4a3a;
+            --blood: #7a2828;
+            --jaundice: #c2a55a;
+            --graphite: #1a1a1a;
+            --cream: #d4c4a8;
+            --gold-dark: #6a5a2a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: var(--graphite);
+            color: var(--cream);
+            font-family: "Crimson Text", Georgia, serif;
+            line-height: 1.55;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ===== CRT OVERLAY ===== */
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9998;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0 1px, transparent 1px 2px);
+            mix-blend-mode: overlay; opacity: 0.6;
+        }
+        body::after {
+            content: "";
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9999;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.7) 100%);
+            mix-blend-mode: multiply;
+        }
+
+        /* ===== VIGNETTE ===== */
+        .vignette {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+            background: radial-gradient(circle at center, transparent 40%, rgba(122,40,40,0.25) 100%);
+            animation: vignettePulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes vignettePulse { 0% { opacity: 0.4; } 50% { opacity: 0.8; } 100% { opacity: 0.4; } }
+
+        /* ===== SCAN FLASH ===== */
+        .scan-flash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: rgba(196,165,90,0.3); pointer-events: none; z-index: 9995;
+            animation: scanMove 6s linear infinite; opacity: 0.3;
+        }
+        @keyframes scanMove { 0% { top: -10px; } 100% { top: 110vh; } }
+
+        /* ===== DOORS ENTRANCE ===== */
+        .doors-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: var(--graphite);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 1.5s ease, visibility 1.5s;
+        }
+        .doors-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .door-frame {
+            width: 90vw; max-width: 600px; height: 70vh; max-height: 500px;
+            position: relative; perspective: 1000px;
+            border: 4px solid var(--sepia); background: var(--olive);
+        }
+        .door {
+            position: absolute; top: 0; width: 50%; height: 100%;
+            background: linear-gradient(90deg, #2a1a0a, #3a2a1a, #2a1a0a);
+            border: 2px solid var(--sepia); transform-origin: center;
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .door-left { left: 0; transform-origin: left center; border-right: 1px solid var(--gold-dark); }
+        .door-right { right: 0; transform-origin: right center; border-left: 1px solid var(--gold-dark); }
+        .door-knob {
+            width: 12px; height: 30px; background: var(--gold-dark);
+            border-radius: 2px; position: absolute;
+        }
+        .door-left .door-knob { right: 20px; }
+        .door-right .door-knob { left: 20px; }
+        .doors-overlay.open .door-left { transform: rotateY(-100deg); }
+        .doors-overlay.open .door-right { transform: rotateY(100deg); }
+        .enter-text {
+            position: absolute; z-index: 1; text-align: center;
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: 1.2rem; letter-spacing: 2px; cursor: pointer;
+            text-shadow: 0 0 10px rgba(122,40,40,0.5);
+            animation: enterPulse 2s ease-in-out infinite;
+        }
+        @keyframes enterPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .enter-sub {
+            display: block; font-size: 0.85rem; color: var(--sepia);
+            margin-top: 8px; font-family: "Caveat", cursive;
+        }
+
+        /* ===== BACKGROUND ===== */
+        .church-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1410 50%, var(--olive) 100%);
+            opacity: 0.3;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            text-align: center; padding: 32px 16px 16px;
+            border-bottom: 1px dashed var(--sepia);
+            position: relative; z-index: 2;
+        }
+        .back-btn {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--sepia); text-decoration: none;
+            font-family: "Special Elite", monospace; font-size: 0.85rem;
+            border: 1px solid var(--sepia); padding: 8px 14px; transition: 0.2s;
+        }
+        .back-btn:hover { background: var(--blood); color: var(--cream); border-color: var(--blood); }
+        h1 {
+            font-family: "Special Elite", monospace; font-size: clamp(1.8rem, 5vw, 3rem);
+            color: var(--blood); letter-spacing: 4px; text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(122,40,40,0.3);
+        }
+        .subtitle {
+            font-family: "Caveat", cursive; font-size: 1.2rem; color: var(--jaundice);
+            margin-top: 6px; font-style: italic;
+        }
+
+        /* ===== MAIN ===== */
+        main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 72px; position: relative; z-index: 2; }
+
+        /* ===== SECTION TITLES ===== */
+        section { margin-bottom: 56px; }
+        section > h2 {
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: 1.4rem; letter-spacing: 2px;
+            border-bottom: 2px solid var(--sepia); padding-bottom: 8px;
+            margin-bottom: 24px; text-transform: uppercase;
+        }
+        section > h2::before { content: "☦ "; opacity: 0.8; }
+
+        /* ===== ICONOSTASIS ===== */
+        .iconostasis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .icon-card {
+            background: linear-gradient(180deg, rgba(60,50,20,0.9), rgba(30,20,10,0.95));
+            border: 3px solid var(--gold-dark); border-radius: 2px;
+            padding: 16px; text-align: center; position: relative;
+            overflow: hidden; cursor: pointer; transition: transform 0.3s, border-color 0.3s;
+        }
+        .icon-card:hover { transform: translateY(-4px); border-color: var(--blood); }
+        .icon-card:hover .icon-eyes { opacity: 1; }
+        .icon-card:hover .icon-blood { opacity: 0.7; }
+        .icon-frame {
+            width: 100%; aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--gold-dark), #4a3a1a);
+            border: 2px solid var(--sepia); position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .icon-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: sepia(0.6) contrast(1.1) brightness(0.85);
+            transition: filter 0.3s;
+        }
+        .icon-card:hover .icon-frame img {
+            filter: sepia(0.8) contrast(1.3) brightness(0.7) saturate(1.5);
+        }
+        .icon-eyes {
+            position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s;
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+        }
+        .eye-pair {
+            display: flex; gap: 20px; position: relative; top: 10px;
+        }
+        .eye-ball {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff 10%, #7a2828 40%, #1a0000 80%);
+            box-shadow: 0 0 6px rgba(122,40,40,0.8); position: relative;
+        }
+        .eye-ball::after {
+            content: ""; position: absolute; top: 35%; left: 35%;
+            width: 5px; height: 5px; border-radius: 50%; background: #000;
+        }
+        .icon-blood {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+            background: linear-gradient(to bottom, transparent, rgba(122,40,40,0.5));
+            opacity: 0; transition: opacity 0.5s; pointer-events: none;
+            mask-image: linear-gradient(to bottom, transparent, black);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+        }
+        .icon-name {
+            font-family: "Special Elite", monospace; color: var(--jaundice);
+            font-size: 0.9rem; margin-top: 10px; letter-spacing: 1px;
+        }
+        .icon-whisper {
+            font-family: "Caveat", cursive; color: var(--blood);
+            font-size: 0.85rem; margin-top: 4px; opacity: 0;
+            transition: opacity 0.5s; min-height: 1.2em;
+        }
+        .icon-card:hover .icon-whisper { opacity: 1; }
+
+        /* ===== CANDLES ===== */
+        .candle-stand {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+            padding: 24px; background: rgba(20,15,10,0.6);
+            border: 1px solid var(--sepia); min-height: 200px;
+        }
+        .candle {
+            width: 40px; height: 120px; position: relative; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .candle-body {
+            width: 100%; height: 80%;
+            background: linear-gradient(90deg, #e8dcc8, #f5f0e0, #e8dcc8);
+            border-radius: 2px 2px 0 0; position: relative;
+            border: 1px solid #b0a080;
+        }
+        .candle-wick { width: 2px; height: 6px; background: #3a2a1a; }
+        .candle-flame {
+            width: 16px; height: 24px; position: absolute; top: -22px; left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse at 40% 30%, #fff 5%, #ffcc66 20%, #ff6633 50%, transparent 70%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0; transition: opacity 0.5s; animation: flameFlicker 0.5s ease-in-out infinite alternate;
+            filter: blur(1px);
+        }
+        .candle.lit .candle-flame { opacity: 1; }
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+        }
+        .candle-label {
+            font-family: "Special Elite", monospace; font-size: 0.7rem;
+            color: var(--sepia); margin-top: 8px; text-align: center; max-width: 80px;
+        }
+        .candle-controls {
+            display: flex; gap: 8px; margin-top: 24px; justify-content: center; flex-wrap: wrap;
+        }
+        .btn {
+            font-family: "Special Elite", monospace; font-size: 0.85rem;
+            background: rgba(40,30,20,0.8); color: var(--jaundice);
+            border: 2px solid var(--sepia); padding: 10px 20px; cursor: pointer;
+            transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn:hover { background: var(--blood); color: var(--cream); border-color: var(--blood); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .candle-count {
+            text-align: center; font-family: "Special Elite", monospace;
+            color: var(--jaundice); font-size: 0.9rem; margin-top: 16px;
+        }
+
+        /* ===== BELL ===== */
+        .bell-zone {
+            text-align: center; padding: 40px 20px; position: relative;
+        }
+        .bell-svg {
+            width: 160px; height: 160px; cursor: pointer; margin: 0 auto;
+            transition: transform 0.1s; display: block;
+        }
+        .bell-svg:hover { transform: scale(1.05); }
+        .bell-svg.ringing {
+            animation: bellRing 0.5s ease-in-out;
+        }
+        @keyframes bellRing {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-12deg); }
+            40% { transform: rotate(10deg); }
+            60% { transform: rotate(-6deg); }
+            80% { transform: rotate(3deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .bell-count {
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: 2rem; margin-top: 16px; letter-spacing: 4px;
+        }
+        .bell-label {
+            font-family: "Caveat", cursive; color: var(--sepia);
+            font-size: 1rem; margin-top: 8px; font-style: italic;
+        }
+        .bell-crack {
+            width: 160px; height: 2px; background: var(--blood); margin: 8px auto 0;
+            opacity: 0; transition: opacity 0.5s, transform 0.5s;
+            transform: scaleX(0); transform-origin: left;
+        }
+        .bell-crack.visible { opacity: 0.6; transform: scaleX(1); }
+
+        /* ===== ALTAR / SERVICE ===== */
+        .altar-zone {
+            text-align: center; padding: 40px 20px;
+            background: linear-gradient(180deg, rgba(40,30,20,0.7), rgba(20,15,10,0.9));
+            border: 2px solid var(--gold-dark); position: relative;
+        }
+        .altar-text {
+            font-family: "Caveat", cursive; font-size: 1.3rem; color: var(--jaundice);
+            margin-bottom: 20px; font-style: italic;
+        }
+        .service-overlay {
+            position: fixed; inset: 0; z-index: 10001;
+            background: rgba(0,0,0,0.95); display: none;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .service-overlay.active { display: flex; }
+        .service-text {
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: clamp(1.2rem, 4vw, 2.5rem); text-align: center;
+            letter-spacing: 3px; text-shadow: 0 0 30px rgba(122,40,40,0.6);
+            max-width: 700px; padding: 20px;
+        }
+        .service-sub {
+            font-family: "Caveat", cursive; color: var(--jaundice); font-size: 1.1rem;
+            margin-top: 20px; opacity: 0.8;
+        }
+        .service-progress {
+            width: 200px; height: 4px; background: var(--sepia); margin-top: 40px;
+            position: relative; overflow: hidden;
+        }
+        .service-progress-fill {
+            position: absolute; top: 0; left: 0; height: 100%; width: 0%;
+            background: var(--blood); transition: width 1s linear;
+        }
+        .service-close {
+            position: absolute; top: 20px; right: 20px;
+            font-family: "Special Elite", monospace; color: var(--sepia);
+            font-size: 1.5rem; cursor: pointer; opacity: 0.3; transition: 0.3s;
+        }
+        .service-close:hover { opacity: 1; color: var(--blood); }
+
+        /* ===== CONFESSION ===== */
+        .confession-zone {
+            padding: 30px 20px; background: rgba(20,15,10,0.7);
+            border: 1px solid var(--sepia); position: relative;
+        }
+        .confession-curtain {
+            position: absolute; inset: 0; background: linear-gradient(90deg, #2a1a1a, #3a1a1a, #2a1a1a);
+            z-index: 2; display: flex; align-items: center; justify-content: center;
+            transition: transform 1s ease; transform-origin: left;
+            cursor: pointer;
+        }
+        .confession-curtain.open { transform: scaleX(0); }
+        .confession-curtain-text {
+            font-family: "Special Elite", monospace; color: var(--blood);
+            font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .confession-inner {
+            position: relative; z-index: 1; padding: 20px;
+        }
+        .confession-input {
+            width: 100%; max-width: 500px; padding: 12px;
+            background: rgba(40,30,20,0.8); border: 1px solid var(--sepia);
+            color: var(--cream); font-family: "Crimson Text", serif; font-size: 1rem;
+            margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto;
+        }
+        .confession-input::placeholder { color: #5a4a3a; }
+        .confession-response {
+            font-family: "Caveat", cursive; color: var(--blood);
+            font-size: 1.2rem; margin-top: 16px; text-align: center; min-height: 1.5em;
+            opacity: 0; transition: opacity 0.5s;
+        }
+        .confession-response.show { opacity: 1; }
+
+        /* ===== WALL OF TEARS ===== */
+        .wall-zone {
+            padding: 20px; background: rgba(20,15,10,0.5);
+            border: 1px dashed var(--sepia); min-height: 200px;
+        }
+        .wall-note {
+            display: inline-block; background: rgba(60,50,30,0.7);
+            border: 1px solid var(--gold-dark); padding: 10px 14px; margin: 6px;
+            font-family: "Caveat", cursive; color: var(--cream); font-size: 0.95rem;
+            transform: rotate(-2deg); max-width: 200px; vertical-align: top;
+            transition: transform 0.2s; cursor: pointer;
+        }
+        .wall-note:nth-child(even) { transform: rotate(2deg); background: rgba(50,40,25,0.7); }
+        .wall-note:hover { transform: rotate(0deg) scale(1.05); border-color: var(--blood); }
+        .wall-note .author { font-family: "Special Elite", monospace; font-size: 0.7rem; color: var(--sepia); margin-top: 6px; }
+        .wall-form { margin-top: 20px; text-align: center; }
+        .wall-input { width: 100%; max-width: 400px; padding: 10px; background: rgba(40,30,20,0.6); border: 1px solid var(--sepia); color: var(--cream); font-family: "Crimson Text", serif; margin-bottom: 8px; }
+        .wall-btn { font-family: "Special Elite", monospace; background: rgba(40,30,20,0.8); color: var(--jaundice); border: 1px solid var(--sepia); padding: 8px 16px; cursor: pointer; }
+        .wall-btn:hover { background: var(--blood); color: var(--cream); }
+
+        /* ===== WHISPERS (hidden) ===== */
+        .whisper-text {
+            position: fixed; color: rgba(122,40,40,0.06); font-size: 0.8rem;
+            font-family: "Special Elite", monospace; pointer-events: none; user-select: none;
+            transition: color 2s; z-index: 1;
+        }
+        .whisper-text:hover { color: rgba(122,40,40,0.5); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center; padding: 36px 22px;
+            border-top: 3px double var(--sepia); background: rgba(0,0,0,0.7);
+            font-family: "Special Elite", monospace; font-size: 0.85rem;
+            letter-spacing: 1px; color: var(--sepia); position: relative; z-index: 2;
+        }
+        footer .quote { font-family: "Caveat", cursive; font-size: 1.4rem; color: var(--blood); font-style: italic; margin-bottom: 14px; }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 700px) {
+            .iconostasis { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .icon-card { padding: 10px; }
+            .icon-name { font-size: 0.8rem; }
+            .bell-svg { width: 120px; height: 120px; }
+            .door-frame { width: 95vw; height: 50vh; }
+            .enter-text { font-size: 1rem; }
+            .candle-stand { gap: 16px; }
+        }
+        @supports (padding: max(0px)) {
+            body { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+        }
+    </style>
+</head>
+<body>
+    <div class="vignette"></div>
+    <div class="scan-flash"></div>
+
+    <!-- Hidden whispers -->
+    <div class="whisper-text" style="top: 8%; left: 3%;">Дед молится за тебя</div>
+    <div class="whisper-text" style="top: 45%; right: 5%;">не спи</div>
+    <div class="whisper-text" style="top: 78%; left: 8%;">колокол звонит</div>
+    <div class="whisper-text" style="top: 92%; right: 10%;">ты следующий прихожанин</div>
+
+    <!-- Doors entrance -->
+    <div class="doors-overlay" id="doorsOverlay">
+        <div class="door-frame" id="doorFrame">
+            <div class="enter-text" id="enterText">
+                ЧАСОВНЯ ПОКРОВКИ
+                <span class="enter-sub">Нажми, чтобы войти. Но помни: Дед уже ждёт.</span>
+            </div>
+            <div class="door door-left"><div class="door-knob"></div></div>
+            <div class="door door-right"><div class="door-knob"></div></div>
+        </div>
+    </div>
+
+    <!-- Church background -->
+    <div class="church-bg"></div>
+
+    <!-- Service overlay -->
+    <div class="service-overlay" id="serviceOverlay">
+        <div class="service-close" id="serviceClose">×</div>
+        <div class="service-text" id="serviceText">Слушай. Не дыши.</div>
+        <div class="service-sub" id="serviceSub">Только слушай.</div>
+        <div class="service-progress">
+            <div class="service-progress-fill" id="serviceProgress"></div>
+        </div>
+    </div>
+
+    <header>
+        <a href="index.html" class="back-btn">← Назад</a>
+        <h1>Часовня Покровки</h1>
+        <p class="subtitle">Здесь молятся не святым. Здесь молятся Деду.</p>
+    </header>
+
+    <main>
+        <!-- Iconostasis -->
+        <section id="iconostasis">
+            <h2>Иконостас</h2>
+            <div class="iconostasis">
+                <div class="icon-card" data-character="ded">
+                    <div class="icon-frame">
+                        <img src="assets/characters/ded.png" alt="Дед">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Святой Дед</div>
+                    <div class="icon-whisper">«Дед молится за тебя. Но не Богу.»</div>
+                </div>
+                <div class="icon-card" data-character="kolya">
+                    <div class="icon-frame">
+                        <img src="assets/characters/kolya.png" alt="Коля">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Мученик Коля</div>
+                    <div class="icon-whisper">«Грызи, пока можешь.»</div>
+                </div>
+                <div class="icon-card" data-character="alenka">
+                    <div class="icon-frame">
+                        <img src="assets/characters/alenka.png" alt="Алёнка">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Алёнка Покровская</div>
+                    <div class="icon-whisper">«Рожки — это знак.»</div>
+                </div>
+                <div class="icon-card" data-character="mila-vitek">
+                    <div class="icon-frame">
+                        <img src="assets/characters/mila-vitek.png" alt="Мила и Витек">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Святые Мила и Витек</div>
+                    <div class="icon-whisper">«Два сердца, одна душа. Навсегда.»</div>
+                </div>
+                <div class="icon-card" data-character="kuroles">
+                    <div class="icon-frame">
+                        <img src="assets/characters/kuroles.png" alt="Куролёс">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Преподобный Куролёс</div>
+                    <div class="icon-whisper">«Карты не врут. Но Дед подтасовывает.»</div>
+                </div>
+                <div class="icon-card" data-character="mikhaylovna">
+                    <div class="icon-frame">
+                        <img src="assets/characters/mikhaylovna.png" alt="Михайловна">
+                        <div class="icon-eyes"><div class="eye-pair"><div class="eye-ball"></div><div class="eye-ball"></div></div></div>
+                        <div class="icon-blood"></div>
+                    </div>
+                    <div class="icon-name">Матушка Михайловна</div>
+                    <div class="icon-whisper">«Красота — это проклятие.»</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Candles -->
+        <section id="candles">
+            <h2>Свечи</h2>
+            <div class="candle-stand" id="candleStand">
+                <!-- Candles generated by JS -->
+            </div>
+            <div class="candle-controls">
+                <button class="btn" id="btnCandleSelf" onclick="lightCandle('self')">🕯️ За себя</button>
+                <button class="btn" id="btnCandleDed" onclick="lightCandle('ded')">🕯️ За Деда</button>
+                <button class="btn" id="btnCandleKolya" onclick="lightCandle('kolya')">🕯️ За Колю</button>
+                <button class="btn" id="btnCandleAlenka" onclick="lightCandle('alenka')">🕯️ За Алёнку</button>
+                <button class="btn" id="btnCandleLost" onclick="lightCandle('lost')">🕯️ За покойника</button>
+            </div>
+            <div class="candle-count" id="candleCount">В Часовне горит 0 свечей</div>
+        </section>
+
+        <!-- Bell -->
+        <section id="bell">
+            <h2>Колокол</h2>
+            <div class="bell-zone">
+                <svg class="bell-svg" id="bellSvg" viewBox="0 0 160 160" onclick="ringBell()">
+                    <defs>
+                        <linearGradient id="bellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5a4a3a"/>
+                            <stop offset="50%" style="stop-color:#3a2a1a"/>
+                            <stop offset="100%" style="stop-color:#1a0a0a"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Bell body -->
+                    <path d="M40 60 Q40 20 80 20 Q120 20 120 60 L130 120 Q135 130 80 130 Q25 130 30 120 Z" fill="url(#bellGrad)" stroke="#2a1a0a" stroke-width="2"/>
+                    <!-- Bell top -->
+                    <circle cx="80" cy="18" r="8" fill="#3a2a1a" stroke="#2a1a0a" stroke-width="2"/>
+                    <!-- Clapper -->
+                    <circle cx="80" cy="138" r="10" fill="#2a1a0a"/>
+                    <line x1="80" y1="130" x2="80" y2="138" stroke="#1a0a0a" stroke-width="3"/>
+                    <!-- Decorative lines -->
+                    <line x1="45" y1="80" x2="115" y2="80" stroke="#2a1a0a" stroke-width="1" opacity="0.5"/>
+                    <line x1="50" y1="100" x2="110" y2="100" stroke="#2a1a0a" stroke-width="1" opacity="0.5"/>
+                    <!-- Chain -->
+                    <line x1="80" y1="10" x2="80" y2="0" stroke="#1a0a0a" stroke-width="3"/>
+                </svg>
+                <div class="bell-crack" id="bellCrack"></div>
+                <div class="bell-count" id="bellCount">0</div>
+                <div class="bell-label">Каждый звон — приближение.</div>
+            </div>
+        </section>
+
+        <!-- Altar / Service -->
+        <section id="altar">
+            <h2>Алтарь</h2>
+            <div class="altar-zone">
+                <div class="altar-text">
+                    «Присутствуй на службе. Не открывай глаза. Не дыши. Только слушай.»
+                </div>
+                <button class="btn" id="btnService" onclick="startService()">☦ Присутствовать на службе</button>
+                <div style="margin-top:16px;font-family:Special Elite,monospace;font-size:0.75rem;color:var(--sepia);opacity:0.6;">
+                    Предупреждение: служба длится 60 секунд. Уйти нельзя.
+                </div>
+            </div>
+        </section>
+
+        <!-- Confession -->
+        <section id="confession">
+            <h2>Исповедальня</h2>
+            <div class="confession-zone">
+                <div class="confession-curtain" id="confessionCurtain" onclick="openConfession()">
+                    <div class="confession-curtain-text">Открыть занавес</div>
+                </div>
+                <div class="confession-inner">
+                    <p style="text-align:center;font-family:Caveat,cursive;color:var(--jaundice);font-size:1.1rem;margin-bottom:12px;">
+                        Что ты скрываешь? Дед всё равно узнает.
+                    </p>
+                    <input type="text" class="confession-input" id="confessionInput" placeholder="Напиши свою тайну..." maxlength="200" onkeydown="if(event.key==='Enter')submitConfession()">
+                    <button class="btn" onclick="submitConfession()">→ Исповедаться</button>
+                    <div class="confession-response" id="confessionResponse"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wall of Tears -->
+        <section id="wall">
+            <h2>Стена плача</h2>
+            <div class="wall-zone" id="wallZone">
+                <div class="wall-note">
+                    «Дед, прости меня за то, что я зашёл на этот сайт.»
+                    <div class="author">— Аноним, Покровка</div>
+                </div>
+                <div class="wall-note">
+                    «Молюсь за Колю. Нет, чтобы он выжил — чтобы он быстрее сдох.»
+                    <div class="author">— Алёнка</div>
+                </div>
+                <div class="wall-note">
+                    «Колокол звонит. Я слышу его даже когда телефон выключен.»
+                    <div class="author">— Неизвестный</div>
+                </div>
+                <div class="wall-note">
+                    «Свеча за себя догорает. Как и я.»
+                    <div class="author">— Василий</div>
+                </div>
+                <div class="wall-note">
+                    «Дед знает моё имя. Он знает, где я живу. Он знает, что я боюсь.»
+                    <div class="author">— Мария</div>
+                </div>
+            </div>
+            <div class="wall-form">
+                <input type="text" class="wall-input" id="wallInput" placeholder="Оставь записку..." maxlength="150">
+                <button class="wall-btn" onclick="addWallNote()">Приколоть</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="quote">«Теперь ты прихожанин. Навсегда.»</div>
+        <div>— из Часовни Покровки</div>
+        <div style="margin-top:18px;font-size:0.78rem;opacity:0.6;">
+            © 2026 metapeka · CC BY-NC-SA 4.0
+        </div>
+    </footer>
+
+    <script>
+        // ===== ENTRANCE DOORS =====
+        const doorsOverlay = document.getElementById('doorsOverlay');
+        const doorFrame = document.getElementById('doorFrame');
+        const enterText = document.getElementById('enterText');
+        let audioCtx = null;
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+        }
+
+        function playDoorCreak() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 2);
+            g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+            osc.connect(g); g.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 2.5);
+        }
+
+        enterText.addEventListener('click', () => {
+            initAudio();
+            playDoorCreak();
+            doorFrame.classList.add('open');
+            setTimeout(() => {
+                doorsOverlay.classList.add('hidden');
+            }, 2200);
+        });
+
+        // ===== ICONOSTASIS EYE TRACKING =====
+        document.querySelectorAll('.icon-card').forEach(card => {
+            const eyes = card.querySelector('.eye-pair');
+            if (!eyes) return;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width/2) / 20;
+                const y = (e.clientY - rect.top - rect.height/2) / 20;
+                eyes.style.transform = `translate(${x}px, ${y}px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                eyes.style.transform = 'translate(0,0)';
+            });
+        });
+
+        // ===== CANDLES =====
+        const CANDLE_KEY = 'ded_church_candles';
+        const candles = JSON.parse(localStorage.getItem(CANDLE_KEY) || '[]');
+        const candleNames = { self: 'За себя', ded: 'За Деда', kolya: 'За Колю', alenka: 'За Алёнку', lost: 'За покойника' };
+
+        function renderCandles() {
+            const stand = document.getElementById('candleStand');
+            stand.innerHTML = '';
+            candles.forEach((c, i) => {
+                const div = document.createElement('div');
+                div.className = 'candle lit';
+                div.innerHTML = `
+                    <div class="candle-flame"></div>
+                    <div class="candle-wick"></div>
+                    <div class="candle-body"></div>
+                    <div class="candle-label">${candleNames[c.type] || c.type}</div>
+                `;
+                div.style.animationDelay = (i * 0.1) + 's';
+                stand.appendChild(div);
+            });
+            document.getElementById('candleCount').textContent = `В Часовне горит ${candles.length} свеч${candles.length === 1 ? 'а' : candles.length < 5 ? 'и' : 'ей'}`;
+        }
+
+        function lightCandle(type) {
+            initAudio();
+            if (candles.length >= 12) {
+                alert('Стенд полон. Дед не разрешает больше.');
+                return;
+            }
+            candles.push({ type, litAt: Date.now() });
+            localStorage.setItem(CANDLE_KEY, JSON.stringify(candles));
+            renderCandles();
+            // Candle sound
+            if (audioCtx) {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.3);
+                g.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                osc.connect(g); g.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            }
+        }
+        renderCandles();
+
+        // ===== BELL =====
+        const BELL_KEY = 'ded_bell_rings';
+        let bellRings = parseInt(localStorage.getItem(BELL_KEY) || '0');
+        const bellSvg = document.getElementById('bellSvg');
+        const bellCount = document.getElementById('bellCount');
+        const bellCrack = document.getElementById('bellCrack');
+        bellCount.textContent = bellRings;
+        updateBellCrack();
+
+        function updateBellCrack() {
+            if (bellRings >= 10) bellCrack.classList.add('visible');
+            if (bellRings >= 50) bellCrack.style.opacity = '0.9';
+        }
+
+        function ringBell() {
+            initAudio();
+            bellRings++;
+            localStorage.setItem(BELL_KEY, bellRings);
+            bellCount.textContent = bellRings;
+            bellSvg.classList.add('ringing');
+            setTimeout(() => bellSvg.classList.remove('ringing'), 500);
+            updateBellCrack();
+            // Bell sound
+            if (audioCtx) {
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                const f = 55 + Math.random() * 10;
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+                g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3);
+                osc.connect(g); g.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 3);
+                // Harmonic
+                const osc2 = audioCtx.createOscillator();
+                const g2 = audioCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(f * 2, audioCtx.currentTime);
+                g2.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                g2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+                osc2.connect(g2); g2.connect(audioCtx.destination);
+                osc2.start(); osc2.stop(audioCtx.currentTime + 2.5);
+            }
+            // Ded whisper after 10th ring
+            if (bellRings === 10) {
+                setTimeout(() => alert('Дед: «Ты звонишь слишком много. Колокол трескается. Как и ты.»'), 300);
+            }
+            if (bellRings === 50) {
+                setTimeout(() => alert('Дед: «Пятьдесят. Дед считает. Но не остановится.»'), 300);
+            }
+        }
+
+        // ===== SERVICE =====
+        const serviceOverlay = document.getElementById('serviceOverlay');
+        const serviceText = document.getElementById('serviceText');
+        const serviceSub = document.getElementById('serviceSub');
+        const serviceProgress = document.getElementById('serviceProgress');
+        const serviceClose = document.getElementById('serviceClose');
+        let serviceActive = false;
+        let serviceTimer = null;
+        const serviceTexts = [
+            { main: 'Слушай. Не дыши.', sub: 'Только слушай.' },
+            { main: 'Колокол зовёт.', sub: 'Ты услышал. Теперь не отвечаешь.' },
+            { main: 'Иконы открывают глаза.', sub: 'Они видят тебя. Всегда видели.' },
+            { main: 'Дым из кадила.', sub: 'Он заполняет лёгкие. Твои лёгкие.' },
+            { main: 'Теперь ты прихожанин.', sub: 'Навсегда.' },
+            { main: 'Служба окончена.', sub: 'Но Дед не отпускает.' }
+        ];
+
+        function startService() {
+            initAudio();
+            if (serviceActive) return;
+            serviceActive = true;
+            serviceOverlay.classList.add('active');
+            serviceProgress.style.width = '0%';
+            let step = 0;
+            const totalSteps = serviceTexts.length;
+            const stepDuration = 10000; // 10 sec per step = 60 sec total
+
+            serviceTimer = setInterval(() => {
+                step++;
+                const pct = (step / totalSteps) * 100;
+                serviceProgress.style.width = pct + '%';
+                if (step < totalSteps) {
+                    serviceText.textContent = serviceTexts[step].main;
+                    serviceSub.textContent = serviceTexts[step].sub;
+                    // Low drone on each step
+                    if (audioCtx) {
+                        const osc = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(40 + step * 5, audioCtx.currentTime);
+                        g.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+                        osc.connect(g); g.connect(audioCtx.destination);
+                        osc.start(); osc.stop(audioCtx.currentTime + 2);
+                    }
+                }
+                if (step >= totalSteps) {
+                    clearInterval(serviceTimer);
+                    serviceActive = false;
+                    // Auto-light candle after service
+                    candles.push({ type: 'service', litAt: Date.now() });
+                    localStorage.setItem(CANDLE_KEY, JSON.stringify(candles));
+                    renderCandles();
+                    setTimeout(() => {
+                        serviceOverlay.classList.remove('active');
+                    }, 3000);
+                }
+            }, stepDuration);
+        }
+
+        serviceClose.addEventListener('click', () => {
+            if (serviceActive) {
+                // Prevent early exit
+                serviceText.textContent = 'Ты не можешь уйти во время службы.';
+                serviceSub.textContent = 'Никто не может.';
+                // Increase fear
+                let fear = parseInt(localStorage.getItem('ded_fear_level') || '0');
+                localStorage.setItem('ded_fear_level', Math.min(5, fear + 1));
+            } else {
+                serviceOverlay.classList.remove('active');
+            }
+        });
+
+        // ===== CONFESSION =====
+        const CONFESSION_KEY = 'ded_confessions';
+        let confessions = JSON.parse(localStorage.getItem(CONFESSION_KEY) || '[]');
+        const confessionCurtain = document.getElementById('confessionCurtain');
+        const confessionResponse = document.getElementById('confessionResponse');
+
+        function openConfession() {
+            confessionCurtain.classList.add('open');
+        }
+
+        function submitConfession() {
+            initAudio();
+            const input = document.getElementById('confessionInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const name = localStorage.getItem('ded_name') || 'гость';
+            const responses = [
+                `Ты украл, ${name}? Дед тоже крадёт. Но у Деда лучше получается.`,
+                `Ты завидуешь? Дед завидует твоей свежести. Пока.`,
+                `Ты боишься? Хорошо. Страх — это начало.`,
+                `Ты соврал. Дед знает. Дед всегда знает.`,
+                `Ты пожалел? Поздно. Дед не прощает.`,
+                `Ты хочешь уйти? Дед тоже хотел. Однажды.`,
+                `Ты скрываешь слишком много. Погреб поместит всё.`
+            ];
+            const resp = responses[Math.floor(Math.random() * responses.length)];
+            confessionResponse.textContent = resp;
+            confessionResponse.classList.add('show');
+            confessions.push({ text, response: resp, date: new Date().toISOString() });
+            localStorage.setItem(CONFESSION_KEY, JSON.stringify(confessions));
+            input.value = '';
+            // Whisper sound
+            if (audioCtx) {
+                const bufferSize = audioCtx.sampleRate * 0.5;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass'; filter.frequency.value = 2000;
+                filter.Q.value = 0.5;
+                const g = audioCtx.createGain();
+                g.gain.setValueAtTime(0.015, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+                noise.connect(filter); filter.connect(g); g.connect(audioCtx.destination);
+                noise.start();
+            }
+        }
+
+        // ===== WALL OF TEARS =====
+        const WALL_KEY = 'ded_wall_notes';
+        let wallNotes = JSON.parse(localStorage.getItem(WALL_KEY) || '[]');
+        const wallZone = document.getElementById('wallZone');
+
+        function renderWall() {
+            // Keep the default notes, add user ones at the end
+            const defaultNotes = wallZone.querySelectorAll('.wall-note');
+            // Remove previous user notes
+            wallZone.querySelectorAll('.wall-note-user').forEach(n => n.remove());
+            wallNotes.forEach(note => {
+                const div = document.createElement('div');
+                div.className = 'wall-note wall-note-user';
+                div.style.transform = `rotate(${(Math.random() - 0.5) * 8}deg)`;
+                div.innerHTML = `${note.text}<div class="author">— ${note.name || 'Аноним'}, ${new Date(note.date).toLocaleDateString('ru-RU')}</div>`;
+                wallZone.appendChild(div);
+            });
+        }
+
+        function addWallNote() {
+            const input = document.getElementById('wallInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const name = localStorage.getItem('ded_name') || 'Аноним';
+            wallNotes.push({ text, name, date: new Date().toISOString() });
+            localStorage.setItem(WALL_KEY, JSON.stringify(wallNotes.slice(-20))); // keep last 20
+            renderWall();
+            input.value = '';
+        }
+        renderWall();
+
+        // ===== INIT AUDIO ON FIRST INTERACTION =====
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('scroll', initAudio, { once: true });
+        document.addEventListener('keydown', initAudio, { once: true });
+        document.addEventListener('touchstart', initAudio, { once: true });
+
+        // ===== CONSOLE MESSAGE =====
+        console.log("%cЧАСОВНЯ ПОКРОВКИ", "color: #7a2828; font-size: 20px; font-family: monospace;");
+        console.log("%cТы вошёл. Двери закрылись. За спиной.", "color: #5c4a3a; font-family: monospace;");
+    </script>
+</body>
+</html>
