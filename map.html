@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Карта деревни — Tales from the Дед</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat&family=Crimson+Text&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --olive: #3d4a2e;
+      --sepia: #5c4a3a;
+      --blood: #7a2828;
+      --jaundice: #c2a55a;
+      --graphite: #1a1a1a;
+      --cream: #d4c4a8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Crimson Text", serif;
+      background: var(--graphite);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--sepia);
+      position: relative;
+    }
+    header h1 {
+      font-family: "Special Elite", monospace;
+      font-size: clamp(1.6rem, 5vw, 2.5rem);
+      color: var(--blood);
+      letter-spacing: 3px;
+    }
+    header .subtitle {
+      font-family: "Caveat", cursive;
+      font-size: 1.1rem;
+      color: var(--jaundice);
+      margin-top: 6px;
+    }
+    .back-btn {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--sepia);
+      text-decoration: none;
+      font-family: "Special Elite", monospace;
+      font-size: 0.85rem;
+      border: 1px solid var(--sepia);
+      padding: 8px 14px;
+      transition: 0.2s;
+    }
+    .back-btn:hover, .back-btn:active {
+      background: var(--blood);
+      color: var(--cream);
+      border-color: var(--blood);
+    }
+    .map-container {
+      position: relative;
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 16px;
+      aspect-ratio: 4/3;
+    }
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 40%, var(--olive) 100%);
+      border: 2px solid var(--sepia);
+    }
+    .ground {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 55%;
+      background: linear-gradient(to bottom, transparent, var(--olive));
+    }
+    .road {
+      position: absolute;
+      background: #3a2a1a;
+      opacity: 0.5;
+    }
+    .road-1 { bottom: 20%; left: 10%; width: 80%; height: 4px; transform: rotate(-3deg); }
+    .road-2 { bottom: 20%; left: 30%; width: 4px; height: 50%; transform: rotate(5deg); }
+    .road-3 { bottom: 20%; left: 60%; width: 4px; height: 55%; transform: rotate(-2deg); }
+    .road-4 { bottom: 45%; left: 30%; width: 35%; height: 4px; }
+    .map-object {
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s;
+      z-index: 10;
+    }
+    .map-object:hover { transform: scale(1.05); }
+    .map-object .label {
+      position: absolute;
+      bottom: -24px; left: 50%;
+      transform: translateX(-50%);
+      font-family: "Special Elite", monospace;
+      font-size: 0.7rem;
+      color: var(--jaundice);
+      white-space: nowrap;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .map-object .tooltip {
+      position: absolute;
+      bottom: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--blood);
+      padding: 8px 12px;
+      font-family: "Special Elite", monospace;
+      font-size: 0.75rem;
+      color: var(--cream);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 100;
+    }
+    .map-object:hover .tooltip,
+    .map-object:active .tooltip {
+      opacity: 1;
+    }
+    /* House styles */
+    .house {
+      width: 60px; height: 50px;
+    }
+    .house-body {
+      width: 100%; height: 70%;
+      background: var(--sepia);
+      border: 2px solid #3a2a1a;
+      position: relative;
+    }
+    .house-roof {
+      width: 120%; height: 35%;
+      background: var(--graphite);
+      position: absolute;
+      top: -30%; left: -10%;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    .house-window {
+      position: absolute;
+      width: 12px; height: 12px;
+      background: #2a2a2a;
+      border: 1px solid #3a2a1a;
+    }
+    .house-window.lit {
+      background: var(--jaundice);
+      box-shadow: 0 0 8px var(--jaundice);
+    }
+    .house-window.lit-red {
+      background: var(--blood);
+      box-shadow: 0 0 8px var(--blood);
+    }
+    .house-window.w1 { top: 8px; left: 8px; }
+    .house-window.w2 { top: 8px; right: 8px; }
+    .house-smoke {
+      position: absolute;
+      top: -45px; left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 30px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .smoke-puff {
+      position: absolute;
+      width: 8px; height: 8px;
+      background: #555;
+      border-radius: 50%;
+      animation: smokeRise 3s ease-out infinite;
+    }
+    @keyframes smokeRise {
+      0% { opacity: 0.6; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(10px, -30px) scale(2); }
+    }
+    /* Well */
+    .well {
+      width: 40px; height: 40px;
+    }
+    .well-base {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: #2a2a2a;
+      border: 3px solid var(--sepia);
+      position: relative;
+    }
+    .well-roof {
+      position: absolute;
+      top: -10px; left: 50%;
+      transform: translateX(-50%);
+      width: 50px; height: 15px;
+      background: var(--graphite);
+      border-radius: 4px 4px 0 0;
+    }
+    .well-rope {
+      position: absolute;
+      top: 5px; left: 50%;
+      transform: translateX(-50%);
+      width: 2px; height: 20px;
+      background: var(--sepia);
+    }
+    .well-coin {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--jaundice);
+      opacity: 0;
+    }
+    .well.coin-dropped .well-coin {
+      animation: coinDrop 1s ease-in forwards;
+    }
+    @keyframes coinDrop {
+      0% { opacity: 1; top: -20px; }
+      100% { opacity: 0; top: 50%; transform: translate(-50%, -50%) scale(0.3); }
+    }
+    /* Bathhouse */
+    .bath {
+      width: 50px; height: 40px;
+    }
+    .bath-body {
+      width: 100%; height: 100%;
+      background: #3a2a1a;
+      border: 2px solid var(--sepia);
+      border-radius: 4px;
+      position: relative;
+    }
+    .bath-steam {
+      position: absolute;
+      top: -20px; left: 0; right: 0;
+      height: 20px;
+      pointer-events: none;
+    }
+    .steam-puff {
+      position: absolute;
+      width: 15px; height: 15px;
+      background: rgba(200,200,200,0.2);
+      border-radius: 50%;
+      animation: steamFloat 2s ease-in-out infinite;
+    }
+    @keyframes steamFloat {
+      0%, 100% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 0.5; transform: translateY(-10px); }
+    }
+    .blood-stain {
+      position: absolute;
+      bottom: -10px; left: 10px;
+      width: 30px; height: 10px;
+      background: radial-gradient(ellipse, rgba(122,40,40,0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .night .blood-stain { opacity: 1; }
+    /* Cellar */
+    .cellar-door {
+      width: 30px; height: 25px;
+    }
+    .cellar-base {
+      width: 100%; height: 100%;
+      background: #2a2a2a;
+      border: 2px solid #4a3a2a;
+      border-radius: 15px 15px 0 0;
+      position: relative;
+    }
+    .cellar-lock {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 10px;
+      background: var(--jaundice);
+      border-radius: 2px;
+    }
+    /* Music note for Alenka */
+    .music-note {
+      position: absolute;
+      top: -15px; right: -5px;
+      font-size: 1rem;
+      animation: notePulse 1.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes notePulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.2); }
+    }
+    /* Trees */
+    .tree {
+      position: absolute;
+      width: 30px; height: 50px;
+      pointer-events: none;
+    }
+    .tree-trunk {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 20px;
+      background: var(--sepia);
+    }
+    .tree-crown {
+      position: absolute;
+      bottom: 15px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid var(--olive);
+    }
+    /* Dialog box */
+    .dialog-box {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      max-width: 600px; width: 90%;
+      background: linear-gradient(180deg, #1a1410, #0a0a0a);
+      border: 2px solid var(--sepia);
+      padding: 16px 20px;
+      font-family: "Crimson Text", serif;
+      font-size: 1rem;
+      color: var(--cream);
+      z-index: 1000;
+      min-height: 60px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+    .dialog-box::before {
+      content: "Дед:";
+      font-family: "Special Elite", monospace;
+      color: var(--blood);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+    .dialog-text {
+      line-height: 1.6;
+    }
+    .cursor {
+      display: inline-block;
+      width: 6px; height: 14px;
+      background: var(--blood);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 3px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    /* Night mode */
+    .night .map-bg {
+      background: linear-gradient(180deg, #000 0%, #0a0a0a 30%, #1a2a1a 100%);
+    }
+    .night .house-window.lit {
+      background: var(--blood);
+      box-shadow: 0 0 12px var(--blood);
+    }
+    .night .label {
+      color: var(--blood);
+    }
+    @media (max-width: 700px) {
+      .map-container { aspect-ratio: 3/4; margin: 12px auto; }
+      .house { width: 45px; height: 40px; }
+      .well { width: 30px; height: 30px; }
+      .bath { width: 38px; height: 32px; }
+      .map-object .label { font-size: 0.6rem; bottom: -18px; }
+      .dialog-box { font-size: 0.9rem; padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Назад</a>
+    <h1>Деревня Деда</h1>
+    <p class="subtitle">Кликни на дом. Но помни: тебя тоже заметят.</p>
+  </header>
+
+  <div class="map-container" id="map-container">
+    <div class="map-bg"></div>
+    <div class="ground"></div>
+
+    <!-- Roads -->
+    <div class="road road-1"></div>
+    <div class="road road-2"></div>
+    <div class="road road-3"></div>
+    <div class="road road-4"></div>
+
+    <!-- Trees (decoration) -->
+    <div class="tree" style="top: 10%; left: 5%;"><div class="tree-trunk"></div><div class="tree-crown"></div></div>
+    <div class="tree" style="top: 15%; left: 85%;"><div class="tree-trunk"></div><div class="tree-crown"></div></div>
+    <div class="tree" style="top: 60%; left: 3%;"><div class="tree-trunk"></div><div class="tree-crown"></div></div>
+    <div class="tree" style="top: 55%; left: 92%;"><div class="tree-trunk"></div><div class="tree-crown"></div></div>
+    <div class="tree" style="top: 35%; left: 48%;"><div class="tree-trunk"></div><div class="tree-crown"></div></div>
+
+    <!-- Ded's House (center-top) -->
+    <div class="map-object house" id="obj-ded" style="top: 15%; left: 42%;" data-name="ded" data-clicks="0">
+      <div class="house-body">
+        <div class="house-roof"></div>
+        <div class="house-window w1" id="win-ded-1"></div>
+        <div class="house-window w2" id="win-ded-2"></div>
+      </div>
+      <div class="house-smoke" id="smoke-ded">
+        <div class="smoke-puff" style="animation-delay: 0s;"></div>
+        <div class="smoke-puff" style="animation-delay: 1s;"></div>
+      </div>
+      <div class="label">Изба Деда</div>
+      <div class="tooltip">Свет горит. Кто-то не спит. Кто-то ждёт.</div>
+    </div>
+
+    <!-- Kolya's House (left) -->
+    <div class="map-object house" id="obj-kolya" style="top: 40%; left: 18%;" data-name="kolya" data-clicks="0">
+      <div class="house-body">
+        <div class="house-roof"></div>
+        <div class="house-window w1 lit" id="win-kolya"></div>
+      </div>
+      <div class="label">Дом Коли</div>
+      <div class="tooltip">Кто-то двигается внутри...</div>
+    </div>
+
+    <!-- Alenka's House (right) -->
+    <div class="map-object house" id="obj-alenka" style="top: 38%; left: 70%;" data-name="alenka" data-clicks="0">
+      <div class="house-body">
+        <div class="house-roof"></div>
+        <div class="house-window w1 lit" id="win-alenka"></div>
+      </div>
+      <div class="music-note">♪</div>
+      <div class="label">Дом Алёнки</div>
+      <div class="tooltip">Музыка тихо играет. Кто-то слушает.</div>
+    </div>
+
+    <!-- Mila & Vitek's House (bottom-left) -->
+    <div class="map-object house" id="obj-milavitek" style="top: 62%; left: 22%;" data-name="milavitek" data-clicks="0">
+      <div class="house-body">
+        <div class="house-roof"></div>
+        <div class="house-window w1 lit" id="win-mila" style="opacity: 0.5;"></div>
+        <div class="house-window w2" id="win-vitek"></div>
+      </div>
+      <div class="label">Мила и Витек</div>
+      <div class="tooltip">Один свет тусклый. Другой погас.</div>
+    </div>
+
+    <!-- Well (center-bottom) -->
+    <div class="map-object well" id="obj-well" style="top: 55%; left: 48%;" data-name="well" data-clicks="0">
+      <div class="well-base">
+        <div class="well-roof"></div>
+        <div class="well-rope"></div>
+        <div class="well-coin"></div>
+      </div>
+      <div class="label">Колодец</div>
+      <div class="tooltip">Брось монетку. Узнай, что скажет Дед.</div>
+    </div>
+
+    <!-- Bathhouse (bottom-right) -->
+    <div class="map-object bath" id="obj-bath" style="top: 60%; left: 72%;" data-name="bath" data-clicks="0">
+      <div class="bath-body">
+        <div class="bath-steam">
+          <div class="steam-puff" style="left: 10px; animation-delay: 0s;"></div>
+          <div class="steam-puff" style="left: 25px; animation-delay: 0.7s;"></div>
+        </div>
+      </div>
+      <div class="blood-stain"></div>
+      <div class="label">Баня</div>
+      <div class="tooltip">Пар горячий. Как и слёзы.</div>
+    </div>
+
+    <!-- Cellar (behind ded's house) -->
+    <div class="map-object cellar-door" id="obj-cellar" style="top: 28%; left: 55%;" data-name="cellar" data-clicks="0">
+      <div class="cellar-base">
+        <div class="cellar-lock"></div>
+      </div>
+      <div class="label">Погреб</div>
+      <div class="tooltip">Заперто. Нужен ключ.</div>
+    </div>
+  </div>
+
+  <div class="dialog-box" id="dialog-box">
+    <div class="dialog-text" id="dialog-text">Кликни на объект... если осмелишься.<span class="cursor"></span></div>
+  </div>
+
+  <script>
+    (function() {
+      const isNight = new Date().getHours() >= 20 || new Date().getHours() < 6;
+      if (isNight) document.body.classList.add('night');
+
+      const DIALOGUES = {
+        ded: [
+          "Ты смеёшься? Дед тебя слышит.",
+          "Дверь заперта. Изнутри.",
+          "Дым идёт. Дед курит. Ждёт тебя.",
+          "Не стучи. Дед и так знает, что ты здесь."
+        ],
+        kolya: {
+          1: "Кто-то двигается внутри...",
+          2: "Тень за окном. Коля? Или кто-то в Коле?",
+          3: "Коля открывает окно: 'Ты? Опять? Дед сказал, что ты придёшь.'"
+        },
+        alenka: [
+          "Алёнка заметила. Беги.",
+          "Окно захлопнулось. Смех остался.",
+          "Она пела. Теперь плачет. Или наоборот."
+        ],
+        milavitek: [
+          "Витек храпит. Мила не спит. Смотрит в окно. На тебя.",
+          "Два сердца. Одно спит. Другое — считает шаги.",
+          "Мила шепчет: 'Витек, кто-то пришёл.' Витек не отвечает."
+        ],
+        well: [
+          "Сегодня твой счастливый день. Завтра — нет.",
+          "Не выходи из дома. Хотя ты уже здесь.",
+          "Ты умрёшь... от скуки, если не зайдёшь завтра.",
+          "Дед знает, что ты думаешь. Да, именно это.",
+          "Колодец глубокий. Как твоя безнадёга.",
+          "Монетка упала. Дед поднял. Теперь это его.",
+          "Ты бросил монетку. Дед бросил кости. Совпадение?",
+          "Внизу кто-то есть. Не вода."
+        ],
+        bath: [
+          "Пар горячий. Как и слёзы.",
+          "Кто-то мылся. Кто-то ушёл. Но не дверью.",
+          "Баня горячая. Дед — тоже."
+        ],
+        cellar: [
+          "Заперто. Нужен ключ. Дед держит его... или кто-то другой.",
+          "Изнутри доносится стук. Или сердцебиение. Или твоё.",
+          "Погреб холодный. Как руки Деда."
+        ]
+      };
+
+      const dialogBox = document.getElementById('dialog-text');
+      let typeTimeout;
+
+      function typeText(text) {
+        clearTimeout(typeTimeout);
+        dialogBox.innerHTML = '';
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            dialogBox.textContent = text.substring(0, i + 1);
+            dialogBox.innerHTML += '<span class="cursor"></span>';
+            i++;
+            typeTimeout = setTimeout(type, 30 + Math.random() * 40);
+          }
+        }
+        type();
+      }
+
+      // Well predictions history
+      const wellHistory = JSON.parse(localStorage.getItem('ded_well_predictions') || '[]');
+
+      // Track map clicks
+      const mapClicks = JSON.parse(localStorage.getItem('ded_map_clicks') || '[]');
+
+      document.querySelectorAll('.map-object').forEach(obj => {
+        obj.addEventListener('click', function() {
+          const name = this.dataset.name;
+          let clicks = parseInt(this.dataset.clicks || '0') + 1;
+          this.dataset.clicks = clicks;
+
+          // Track
+          if (!mapClicks.includes(name)) {
+            mapClicks.push(name);
+            localStorage.setItem('ded_map_clicks', JSON.stringify(mapClicks));
+          }
+
+          let text = '';
+
+          if (name === 'kolya') {
+            text = DIALOGUES.kolya[Math.min(clicks, 3)] || DIALOGUES.kolya[3];
+            if (clicks >= 3) {
+              this.querySelector('.house-window').style.transform = 'translateY(-5px)';
+            }
+          } else if (name === 'well') {
+            this.classList.add('coin-dropped');
+            setTimeout(() => this.classList.remove('coin-dropped'), 1000);
+            const pred = DIALOGUES.well[Math.floor(Math.random() * DIALOGUES.well.length)];
+            text = pred;
+            wellHistory.push({ prediction: pred, date: new Date().toISOString() });
+            localStorage.setItem('ded_well_predictions', JSON.stringify(wellHistory));
+          } else if (Array.isArray(DIALOGUES[name])) {
+            text = DIALOGUES[name][Math.floor(Math.random() * DIALOGUES[name].length)];
+          } else {
+            text = "Дед молчит. Но смотрит.";
+          }
+
+          typeText(text);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
